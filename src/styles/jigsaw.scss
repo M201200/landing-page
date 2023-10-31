@@ -1,0 +1,121 @@
+$columns-rows : 5; /* number of columns/rows, don't forget to adjust the HTML value */
+
+.puzzle {
+  --image:url("/images/nature.jpg");
+  --piece-size: 70px; /* size of the puzzle */
+  --radius: 12px;
+  display: grid;
+  width: fit-content;
+  border: 1px solid;
+  margin: auto;
+  grid: auto-flow var(--piece-size)/repeat($columns-rows,var(--piece-size));
+}
+.piece {
+  display: grid;
+  position: relative;
+  place-self: start end;
+
+  filter: drop-shadow(0 0 2px rgba(80, 80, 80, 0.575)) drop-shadow(0 0 2px rgba(80, 80, 80, 0.575));
+  height: calc(var(--piece-size) + var(--radius));
+  width: calc(var(--piece-size) + var(--radius));
+
+  --mask: 
+    radial-gradient(var(--radius) at calc(50% - var(--radius)/2) 0,#0000 98%,#000) var(--radius)  0/100% var(--radius) no-repeat,
+    radial-gradient(var(--radius) at calc(100% - var(--radius)) calc(50% - var(--radius)/2),#0000 98%,#000) var(--radius) 50%/100% calc(100% - 2*var(--radius)) no-repeat,
+    radial-gradient(var(--radius) at var(--radius) calc(50% - var(--radius)/2),#000 98%,#0000),
+    radial-gradient(var(--radius) at calc(50% + var(--radius)/2) calc(100% - var(--radius)),#000 98%,#0000);
+}
+.piece:before {
+  content: "";
+  background: var(--image) 0/calc(#{$columns-rows}*var(--piece-size)) calc(#{$columns-rows}*var(--piece-size));
+  -webkit-mask: var(--mask);
+          mask: var(--mask);
+}
+
+.piece:first-child {
+  height: calc(var(--piece-size) + var(--radius));
+  width: var(--piece-size);
+  --mask: 
+    radial-gradient(var(--radius) at 100% calc(50% + var(--radius)/2),#0000 98%,#000) 0 calc(-1*var(--radius)) no-repeat,
+    radial-gradient(var(--radius) at 50% calc(100% - var(--radius)),#000 98%,#0000)
+}
+.piece:nth-child(-n + #{$columns-rows - 1}):not(:first-child) {
+  place-self: start end;
+  height: calc(var(--piece-size) + var(--radius));
+  width: calc(var(--piece-size) + var(--radius));
+  --mask:
+    radial-gradient(var(--radius) at calc(100% - var(--radius)) calc(50% + var(--radius)/2),#0000 98%,#000) var(--radius) calc(-1*var(--radius)) no-repeat,
+    radial-gradient(var(--radius) at var(--radius) calc(50% - var(--radius)/2),#000 98%,#0000),
+    radial-gradient(var(--radius) at calc(50% + var(--radius)/2) calc(100% - var(--radius)),#000 98%,#0000)
+}
+
+.piece:nth-child(#{$columns-rows}) {
+  place-self: start end;
+  --mask: 
+    linear-gradient(#000 0 0) var(--radius) calc(-1*var(--radius)) no-repeat,
+    radial-gradient(var(--radius) at var(--radius) calc(50% - var(--radius)/2),#000 98%,#0000),
+    radial-gradient(var(--radius) at calc(50% + var(--radius)/2) calc(100% - var(--radius)),#000 98%,#0000)
+}
+.piece:nth-child(#{$columns-rows}n + 1):not(:first-child):not(:nth-last-child(#{$columns-rows})) {
+  height: calc(var(--piece-size) + var(--radius));
+  width: var(--piece-size);
+  --mask: 
+    radial-gradient(var(--radius) at 100% calc(50% - var(--radius)/2),#0000 98%,#000) 50%/ 100% calc(100% - 2*var(--radius)) no-repeat,
+    radial-gradient(var(--radius) at 50% 0,#0000 98%,#000) 0 0/ 100% var(--radius) no-repeat,
+    radial-gradient(var(--radius) at 50% calc(100% - var(--radius)),#000 98%,#0000)
+}
+.piece:nth-last-child(#{$columns-rows}) {
+  height: var(--piece-size);
+  width: var(--piece-size);
+  --mask: 
+    radial-gradient(var(--radius) at 100% calc(50% - var(--radius)),#0000 98%,#000) 0 var(--radius) no-repeat,
+    radial-gradient(var(--radius) at 50% 0,#0000 98%,#000) 0 0/ 100% var(--radius) no-repeat;
+}
+.piece:nth-child(#{$columns-rows}n):not(:nth-child(#{$columns-rows})):not(:last-child) {
+  height: calc(var(--piece-size) + var(--radius));
+  width: calc(var(--piece-size) + var(--radius));
+  --mask: 
+    radial-gradient(var(--radius) at calc(50% - var(--radius)/2) var(--radius),#0000 98%,#000) var(--radius) calc(-1*var(--radius)) no-repeat,
+    radial-gradient(var(--radius) at var(--radius) calc(50% - var(--radius)/2),#000 98%,#0000),
+    radial-gradient(var(--radius) at calc(50% + var(--radius)/2) calc(100% - var(--radius)),#000 98%,#0000)
+}
+.piece:last-child {
+  height: var(--piece-size);
+  width: calc(var(--piece-size) + var(--radius));
+  --mask: 
+    radial-gradient(var(--radius) at calc(50% - var(--radius)/2) 0,#0000 98%,#000) var(--radius) 0 no-repeat,
+    radial-gradient(var(--radius) at var(--radius) 50%,#000 98%,#0000)
+}
+.piece:nth-last-child(-n + #{$columns-rows - 1}):not(:last-child) {
+  place-self: end;
+  height: var(--piece-size);
+  width: calc(var(--piece-size) + var(--radius));
+  --mask: 
+    radial-gradient(var(--radius) at calc(50% - var(--radius)/2) 0,#0000 98%,#000) var(--radius)  0/100% var(--radius) no-repeat,
+    radial-gradient(var(--radius) at calc(100% - var(--radius)) calc(50% - var(--radius)/2),#0000 98%,#000) var(--radius) 100%/100% calc(100% - var(--radius)) no-repeat,
+    radial-gradient(var(--radius) at var(--radius) 50%,#000 98%,#0000)
+}
+
+@for $i from 1 to ($columns-rows*$columns-rows + 1) {
+  $radial-axis: (random(180));
+  $x-axis: ($i - 1)%$columns-rows;
+  $y-axis: floor(calc(($i - 0.001)/$columns-rows));
+  .piece:nth-of-type(#{$i}) {
+    transform: 
+      translate(calc(($columns-rows - 1)/2 - $x-axis)*100%, calc(($columns-rows - 1)/2 - $y-axis)*100%) 
+      rotate($radial-axis*1deg) 
+      translate(calc(random(70)*1% + ($columns-rows - 1)*100%)) 
+      rotate(calc(random(20) - 10 - $radial-axis)*1deg);
+      animation: assemble calc(6000ms/random(2)/random(2)) ease-in-out forwards;
+  }
+  .piece:nth-of-type(#{$i}),
+  .piece:nth-of-type(#{$i})::before {
+    background-position: calc($x-axis/($columns-rows - 1))*100% calc($y-axis/($columns-rows - 1))*100%;
+  }
+  
+  
+}
+
+@keyframes assemble {
+  to {transform: initial;}
+}

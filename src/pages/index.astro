@@ -1,0 +1,102 @@
+---
+import Card from "../components/Card.astro"
+import Jigsaw from "../components/Jigsaw.astro"
+import Layout from "../layouts/Layout.astro"
+---
+
+<Layout title="Welcome to Playground">
+  <main>
+    <section>
+      <h1 class="welcome-header">Welcome to Playground!</h1>
+      <p class="welcome-text">We have variety of games for a whole family.</p>
+      <ul class="card-container">
+        <Card
+          href="#jigsaw"
+          title="Jigsaw Puzzles"
+          body="Take your time to assemble a nice picture"
+        />
+        <Card
+          href="#board"
+          title="Board games"
+          body="Have some fun with our board games"
+        />
+        <Card
+          href="#card"
+          title="Card games"
+          body="Try your friendship with UNO"
+        />
+      </ul>
+    </section>
+    <section class="container">
+      <h1>Take your time to assemble a nice picture</h1>
+      <Jigsaw />
+    </section>
+    <section>
+      <h1>Have some fun with our board games</h1>
+      <img src="/images/board-game.jpg" alt="Board game" />
+    </section>
+    <section>
+      <h1>Try your friendship with UNO</h1>
+      <img src="/images/nature.jpg" alt="Nature" />
+    </section>
+  </main>
+</Layout>
+
+<style>
+  :root {
+    --jigsaw-width: 60rem;
+  }
+  main {
+    display: grid;
+    justify-items: center;
+    grid-column-start: 2;
+    grid-column-end: 12;
+    text-align: center;
+  }
+  .welcome-header {
+    font-size: 3rem;
+  }
+  .welcome-text {
+    font-size: 2rem;
+    max-width: 65ch;
+  }
+  .card-container {
+    display: grid;
+    gap: 2rem;
+  }
+  .container {
+    width: 100%;
+    display: grid;
+    gap: 2rem;
+    justify-content: center;
+  }
+  .jigsaw {
+    background-image: url("/images/nature.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    width: var(--jigsaw-width);
+    aspect-ratio: 16/9;
+  }
+  .top-left-piece {
+    /* transform: translateX(-3rem); */
+    background-image: url("/images/nature.jpg");
+    background-size: var(--jigsaw-width);
+    background-repeat: no-repeat;
+  }
+  .top-right-piece {
+    /* transform: translateX(3rem); */
+    background-image: url("/images/nature.jpg");
+    background-position: top right;
+    background-size: var(--jigsaw-width);
+    background-repeat: no-repeat;
+  }
+  @media (min-width: 1024px) {
+    .card-container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,28 @@
+.game {
+    position: relative;
+
+    width: 30rem;
+    aspect-ratio: 1;
+}
+
+.board-piece {
+    position: absolute;
+
+    top: 44%;
+    left: 8%;
+
+    width: 1.85rem;
+
+    animation: turn 3s ease-in-out forwards;
+}
+
+@keyframes turn {
+    50% {
+        top: 30%;
+        left:6%
+    }
+    100% {
+        top: 14%;
+        left: 8%;
+    }
+}

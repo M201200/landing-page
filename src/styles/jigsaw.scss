@@ -106,7 +106,7 @@ $columns-rows : 5; /* number of columns/rows, don't forget to adjust the HTML va
       rotate($radial-axis*1deg) 
       translate(calc(random(70)*1% + ($columns-rows - 1)*100%)) 
       rotate(calc(random(20) - 10 - $radial-axis)*1deg);
-      animation: assemble calc(6000ms/random(2)/random(2)) ease-in-out forwards;
+      animation: assemble calc(1ms*random(250) + 1ms*random(2500) + 1ms*$i*random(100)) ease-in-out forwards;
   }
   .piece:nth-of-type(#{$i}),
   .piece:nth-of-type(#{$i})::before {

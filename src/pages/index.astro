@@ -1,8 +1,9 @@
 ---
 import Card from "../components/Card.astro"
-import Game from "../components/Game.astro"
+import Game from "../components/BoardGame.astro"
 import Jigsaw from "../components/Jigsaw.astro"
 import Layout from "../layouts/Layout.astro"
+import CardGame from "../components/CardGame.astro"
 ---
 
 <Layout title="Welcome to Playground">
@@ -24,7 +25,7 @@ import Layout from "../layouts/Layout.astro"
         <Card
           href="#card"
           title="Card games"
-          body="Try your friendship with UNO"
+          body="Try your friendship with card games"
         />
       </ul>
     </section>
@@ -37,7 +38,8 @@ import Layout from "../layouts/Layout.astro"
       <Game />
     </section>
     <section>
-      <h1>Try your friendship with UNO</h1>
+      <h1>Try your friendship with card games</h1>
+      <CardGame />
     </section>
   </main>
 </Layout>

@@ -112,8 +112,6 @@ $columns-rows : 5; /* number of columns/rows, don't forget to adjust the HTML va
   .piece:nth-of-type(#{$i})::before {
     background-position: calc($x-axis/($columns-rows - 1))*100% calc($y-axis/($columns-rows - 1))*100%;
   }
-  
-  
 }
 
 @keyframes assemble {

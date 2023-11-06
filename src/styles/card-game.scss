@@ -1,6 +1,8 @@
 .cards-container {
     position: relative;
 
+    border: 2px solid black;
+
     width: 40rem;
     aspect-ratio: 1;
 }
@@ -10,24 +12,52 @@
 
     width: 4rem;
 
-    right: 10%;
-    bottom: 10%;
+    right: 5%;
+    bottom: 5%;
+
+    animation: deal 200ms ease-in-out forwards;
+
 }
 
 
-@for $i from 1 to 28 {
-    $radial-axis: 0;
-    $x-axis: 0;
-    $y-axis: 0;
-    .unu-card:nth-of-type(#{$i < 8}) {
-      transform: 
-        translate 0;
-        animation: deal 300ms calc(10ms*$i) ease-in-out forwards;
+@for $i from 1 to 29 {
+  $placement: calc(-15rem - (($i/2)*1rem));
+  $rotation: calc((30 - $i*10)*1deg);
+    .unu-card:nth-of-type(#{$i}) {
+        animation-delay: calc(200ms*$i + 1ms*random(50));
+    }
+    .unu-card:nth-of-type(#{4*$i - 3}) {
+      --x-axis: #{$placement};
+      --y-axis: -30rem;
+      --radial-axis: calc(180deg - #{$rotation});
+    }
+    .unu-card:nth-of-type(#{4*$i - 2}) {
+      --x-axis: -30rem;
+      --y-axis: #{$placement};
+      --radial-axis: calc(90deg + #{$rotation});
+    }
+    .unu-card:nth-of-type(#{4*$i - 1}) {
+      --x-axis: #{$placement};
+      --y-axis: -2rem;
+      --radial-axis: calc(0deg + #{$rotation});
+    }
+    .unu-card:nth-of-type(#{4*$i}) {
+      --x-axis: -2rem;
+      --y-axis: #{$placement};
+      --radial-axis: calc(-90deg - #{$rotation});
     }
     
-    @keyframes deal {
-    
-  }
   }
 
-  
+  @for $i from 29 to 104 {
+    .unu-card:nth-of-type(#{$i}) {
+        animation: none;
+    }    
+  }
+
+  @keyframes deal {
+  to {
+    transform: 
+        translateY(var(--y-axis)) translateX(var(--x-axis)) rotate(var(--radial-axis));
+  }
+}

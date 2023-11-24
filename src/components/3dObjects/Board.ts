@@ -7,7 +7,13 @@ import {
   Scene,
   TextureLoader,
   Vector3,
+  Group,
 } from "three"
+
+type PhysicalObject = {
+  model: Group | Mesh
+  body: Body
+}
 
 const params = {
   size: 7,
@@ -16,7 +22,7 @@ const params = {
   segmentsEdge: 10,
 }
 
-export function board(scene: Scene, world: World) {
+export function board(scene: Scene, world: World): PhysicalObject {
   const textureLoader = new TextureLoader()
 
   const BoxGeo = new BoxGeometry(
@@ -47,16 +53,16 @@ export function board(scene: Scene, world: World) {
   const position = new Vector3(0, 4, 0)
   const rotation = new Vector3(-Math.PI / 8, 0.7, 0)
 
-  const mesh = new Mesh(BoxGeo, boardMaterial)
+  const model = new Mesh(BoxGeo, boardMaterial)
 
-  mesh.castShadow = true
-  mesh.receiveShadow = true
+  model.castShadow = true
+  model.receiveShadow = true
 
-  mesh.position.copy(position)
+  model.position.copy(position)
 
-  mesh.rotation.set(rotation.x, rotation.y, rotation.z)
+  model.rotation.set(rotation.x, rotation.y, rotation.z)
 
-  scene.add(mesh)
+  scene.add(model)
 
   const body = new Body({
     mass: 2,
@@ -71,5 +77,5 @@ export function board(scene: Scene, world: World) {
 
   world.addBody(body)
 
-  return { mesh, body }
+  return { model, body }
 }

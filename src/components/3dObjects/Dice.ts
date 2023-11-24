@@ -15,6 +15,11 @@ import {
 
 import { Vec3, Body, Box, World } from "cannon-es"
 
+type PhysicalObject = {
+  model: Group | Mesh
+  body: Body
+}
+
 const params = {
   segments: 35,
   edgeRadius: 0.12,
@@ -28,10 +33,10 @@ const diceModel = createDiceMesh()
 ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////
 
-export function dice(scene: Scene, world: World) {
-  const mesh = diceModel.clone()
-  mesh.scale.set(params.scale, params.scale, params.scale)
-  scene.add(mesh)
+export function dice(scene: Scene, world: World): PhysicalObject {
+  const model = diceModel.clone()
+  model.scale.set(params.scale, params.scale, params.scale)
+  scene.add(model)
 
   const body = new Body({
     mass: 0.3,
@@ -43,7 +48,7 @@ export function dice(scene: Scene, world: World) {
 
   world.addBody(body)
 
-  return { mesh, body }
+  return { model, body }
 }
 
 ////////////////////////////////////////////////////

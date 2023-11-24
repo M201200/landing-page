@@ -12,6 +12,11 @@ import {
 
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js"
 
+type PhysicalObject = {
+  model: Group | Mesh
+  body: Body
+}
+
 const params = {
   scale: 5,
   tableTopRadius: 1,
@@ -23,7 +28,7 @@ const params = {
   tableLegHeight: 0.9,
 }
 
-export function table(scene: Scene, world: World) {
+export function table(scene: Scene, world: World): PhysicalObject {
   const position = new Vector3(
     0,
     -7 + (params.tableLegHeight + params.tableTopHeight) * params.scale,
@@ -76,19 +81,19 @@ export function table(scene: Scene, world: World) {
     metalness: 1,
   })
 
-  const mesh = new Group()
+  const model = new Group()
 
   const tableFrameMesh = new Mesh(createTableFrame(), tableMaterial)
   tableFrameMesh.castShadow = true
   tableFrameMesh.receiveShadow = true
   const tableTopMesh = new Mesh(tableTop, tableTopMaterial)
 
-  mesh.add(tableFrameMesh, tableTopMesh)
-  mesh.scale.set(params.scale, params.scale, params.scale)
-  mesh.position.copy(position)
-  mesh.rotateY(rotationY)
+  model.add(tableFrameMesh, tableTopMesh)
+  model.scale.set(params.scale, params.scale, params.scale)
+  model.position.copy(position)
+  model.rotateY(rotationY)
 
-  scene.add(mesh)
+  scene.add(model)
 
   const body = new Body({
     type: Body.STATIC,
@@ -174,6 +179,6 @@ export function table(scene: Scene, world: World) {
 
   world.addBody(body)
 
-  return { mesh, body }
+  return { model, body }
 }
 ;``

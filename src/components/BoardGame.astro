@@ -102,10 +102,10 @@
   import { OrbitControls } from "three/addons/controls/OrbitControls.js"
   import CannonDebugger from "cannon-es-debugger"
 
-  import { dice } from "./Dice.ts"
-  import { board } from "./Board"
-  import { table } from "./Table"
-  import { puzzlePiece } from "./Puzzle"
+  import { dice } from "./3dObjects/Dice.ts"
+  import { board } from "./3dObjects/Board.ts"
+  import { table } from "./3dObjects/Table.ts"
+  import { jigsaw } from "./demos/Jigsaw.ts"
 
   const canvasEl = document.querySelector("#canvas")!
   const scoreResult = document.querySelector("#score-result")!
@@ -130,17 +130,17 @@
   })
   physicsWorld.defaultContactMaterial.restitution = 0.3
   //@ts-ignore
-  const cannonDebugger = new CannonDebugger(scene, physicsWorld)
+  // const cannonDebugger = new CannonDebugger(scene, physicsWorld)
 
   // const Dice = dice(scene, physicsWorld)
   // const Board = board(scene, physicsWorld)
-  const Puzzle = puzzlePiece(scene, physicsWorld)
+  const Jigsaw = jigsaw(scene, physicsWorld)
   table(scene, physicsWorld)
 
   const controls = new OrbitControls(camera, renderer.domElement)
 
   type PhysicalObject = {
-    mesh: Group
+    model: Group | Mesh
     body: Body
   }
 
@@ -179,8 +179,8 @@
 
     createFloor()
     // for (let i = 0; i < numberOfDice; i++) {
-    //   diceArray.push(Dice)
-    //   addDiceEvents(diceArray[i])
+    // diceArray.push(Dice)
+    // addDiceEvents(diceArray[i])
     // }
 
     throwDice()
@@ -262,48 +262,32 @@
     }
   }
 
-  async function render() {
+  function syncBodyAndMeshPosition(object: PhysicalObject) {
+    object.model.position.set(
+      object.body.position.x,
+      object.body.position.y,
+      object.body.position.z
+    )
+    object.model.quaternion.set(
+      object.body.quaternion.x,
+      object.body.quaternion.y,
+      object.body.quaternion.z,
+      object.body.quaternion.w
+    )
+  }
+
+  function render() {
     physicsWorld.fixedStep()
 
-    // for (const dice of diceArray) {
-    //   dice.mesh.position.set(
-    //     dice.body.position.x,
-    //     dice.body.position.y,
-    //     dice.body.position.z
-    //   )
-    //   dice.mesh.quaternion.set(
-    //     dice.body.quaternion.x,
-    //     dice.body.quaternion.y,
-    //     dice.body.quaternion.z,
-    //     dice.body.quaternion.w
-    //   )
-    // }
+    for (const dice of diceArray) {
+      // syncBodyAndMeshPosition(dice)
+    }
 
-    // Board.mesh.position.set(
-    //   Board.body.position.x,
-    //   Board.body.position.y,
-    //   Board.body.position.z
-    // )
-    // Board.mesh.quaternion.set(
-    //   Board.body.quaternion.x,
-    //   Board.body.quaternion.y,
-    //   Board.body.quaternion.z,
-    //   Board.body.quaternion.w
-    // )
+    // syncBodyAndMeshPosition(Board)
 
-    Puzzle.model.position.set(
-      Puzzle.body.position.x,
-      Puzzle.body.position.y,
-      Puzzle.body.position.z
-    )
-    Puzzle.model.quaternion.set(
-      Puzzle.body.quaternion.x,
-      Puzzle.body.quaternion.y,
-      Puzzle.body.quaternion.z,
-      Puzzle.body.quaternion.w
-    )
+    Jigsaw.forEach((piece) => syncBodyAndMeshPosition(piece))
 
-    cannonDebugger.update()
+    // cannonDebugger.update()
 
     controls.update()
 
@@ -325,22 +309,22 @@
       d.body.angularVelocity.setZero()
 
       d.body.position = new Vec3(4, dIdx * 1.5, -0.5)
-      d.mesh.position.set(
+      d.model.position.set(
         d.body.position.x,
         d.body.position.y,
         d.body.position.z
       )
 
-      d.mesh.rotation.set(
+      d.model.rotation.set(
         2 * Math.PI * Math.random(),
         0,
         2 * Math.PI * Math.random()
       )
       d.body.quaternion.set(
-        d.mesh.quaternion.x,
-        d.mesh.quaternion.y,
-        d.mesh.quaternion.z,
-        d.mesh.quaternion.w
+        d.model.quaternion.x,
+        d.model.quaternion.y,
+        d.model.quaternion.z,
+        d.model.quaternion.w
       )
 
       const force = 1 + 2 * Math.random()

@@ -106,6 +106,7 @@
   import { board } from "./3dObjects/Board.ts"
   import { table } from "./3dObjects/Table.ts"
   import { jigsaw } from "./demos/Jigsaw.ts"
+  import { boardGamePiece } from "./3dObjects/BoardGamePiece"
 
   const canvasEl = document.querySelector("#canvas")!
   const scoreResult = document.querySelector("#score-result")!
@@ -132,9 +133,13 @@
   //@ts-ignore
   // const cannonDebugger = new CannonDebugger(scene, physicsWorld)
 
+  physicsWorld.defaultContactMaterial.contactEquationStiffness = 1e7
+  physicsWorld.defaultContactMaterial.contactEquationRelaxation = 4
+
   // const Dice = dice(scene, physicsWorld)
-  // const Board = board(scene, physicsWorld)
-  const Jigsaw = jigsaw(scene, physicsWorld)
+  const Board = board(scene, physicsWorld)
+  const BoardGamePiece = boardGamePiece(scene, physicsWorld)
+  // const Jigsaw = jigsaw(scene, physicsWorld)
   table(scene, physicsWorld)
 
   const controls = new OrbitControls(camera, renderer.domElement)
@@ -145,7 +150,11 @@
   }
 
   const diceArray: PhysicalObject[] = []
-  const numberOfDice = 1
+  // const numberOfDice = 1
+  // for (let i = 0; i < numberOfDice; i++) {
+  //   diceArray.push(Dice)
+  //   addDiceEvents(diceArray[i])
+  // }
 
   initScene()
 
@@ -178,10 +187,6 @@
     scene.add(topLight)
 
     createFloor()
-    // for (let i = 0; i < numberOfDice; i++) {
-    // diceArray.push(Dice)
-    // addDiceEvents(diceArray[i])
-    // }
 
     throwDice()
 
@@ -279,14 +284,10 @@
   function render() {
     physicsWorld.fixedStep()
 
-    for (const dice of diceArray) {
-      // syncBodyAndMeshPosition(dice)
-    }
-
-    // syncBodyAndMeshPosition(Board)
-
-    Jigsaw.forEach((piece) => syncBodyAndMeshPosition(piece))
-
+    syncBodyAndMeshPosition(Board)
+    // diceArray.forEach((dice) => syncBodyAndMeshPosition(dice))
+    // Jigsaw.forEach((piece) => syncBodyAndMeshPosition(piece))
+    syncBodyAndMeshPosition(BoardGamePiece)
     // cannonDebugger.update()
 
     controls.update()

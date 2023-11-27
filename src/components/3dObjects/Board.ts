@@ -1,4 +1,4 @@
-import { Body, Box, Vec3, World } from "cannon-es"
+import { Body, Box, Quaternion, Vec3, World } from "cannon-es"
 import {
   BoxGeometry,
   Mesh,
@@ -50,8 +50,8 @@ export function board(scene: Scene, world: World): PhysicalObject {
     new MeshStandardMaterial({ color: 0xeeeeee }),
   ]
 
-  const position = new Vector3(0, 4, 0)
-  const rotation = new Vector3(-Math.PI / 8, 0.7, 0)
+  const position = new Vector3(0, 1, 0)
+  const rotation = new Vector3(-Math.PI / 2, 0, 0)
 
   const model = new Mesh(BoxGeo, boardMaterial)
 
@@ -69,7 +69,13 @@ export function board(scene: Scene, world: World): PhysicalObject {
     shape: new Box(
       new Vec3(params.size / 2, params.size / 2, params.depth / 2)
     ),
-    position: new Vec3(position.x, position.y, position.z),
+    position: new Vec3(model.position.x, model.position.y, model.position.z),
+    quaternion: new Quaternion(
+      model.quaternion.x,
+      model.quaternion.y,
+      model.quaternion.z,
+      model.quaternion.w
+    ),
     sleepTimeLimit: 1,
   })
   body.allowSleep = true

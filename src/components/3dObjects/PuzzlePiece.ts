@@ -13,7 +13,6 @@ type PuzzlePiece = {
   corner?: boolean
   side?: boolean
   oppositeSide?: boolean
-  size?: number
   scale?: number
   posX?: number
   posY?: number
@@ -35,8 +34,7 @@ export function puzzlePiece({
   corner = false,
   side = false,
   oppositeSide = false,
-  size = 1,
-  scale = 0.5,
+  scale = 1, // Change scale if you want to change piece size.
   posX = 0,
   posY = 0,
   posZ = 0,
@@ -44,6 +42,7 @@ export function puzzlePiece({
   rotY = 0,
   rotZ = 0,
 }: PuzzlePiece): PhysicalObject {
+  const size = 1 // DO NOT TOUCH! Values other than 1 will broke texture offset!
   const depth = size * 0.001
   const offset = size * 0.25
 
@@ -51,6 +50,7 @@ export function puzzlePiece({
     corner || side || oppositeSide
       ? [0, 0, 0, 0, 0, 0]
       : [-offset, -offset * 0.05, offset * 0.85, size * 0.25, 0, 3.14159, true]
+
   const sideRecess: Path = corner
     ? [0, 0, 0, 0, 0, 0]
     : [
@@ -62,6 +62,7 @@ export function puzzlePiece({
         -1.5708,
         true,
       ]
+
   const bottomNotch: Path =
     corner || oppositeSide
       ? [offset, offset * 0.05, offset * 0.85, size * 0.25, 3.14159, 0, true]

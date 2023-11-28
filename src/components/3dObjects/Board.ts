@@ -1,14 +1,14 @@
-import { Body, Box, Quaternion, Vec3, World } from "cannon-es"
 import {
   BoxGeometry,
   Mesh,
   MeshStandardMaterial,
   SRGBColorSpace,
-  Scene,
   TextureLoader,
   Vector3,
   Group,
 } from "three"
+
+import { Body, Box, Quaternion, Vec3 } from "cannon-es"
 
 type PhysicalObject = {
   model: Group | Mesh
@@ -22,7 +22,7 @@ const params = {
   segmentsEdge: 10,
 }
 
-export function board(scene: Scene, world: World): PhysicalObject {
+export function board(): PhysicalObject {
   const textureLoader = new TextureLoader()
 
   const BoxGeo = new BoxGeometry(
@@ -62,8 +62,6 @@ export function board(scene: Scene, world: World): PhysicalObject {
 
   model.rotation.set(rotation.x, rotation.y, rotation.z)
 
-  scene.add(model)
-
   const body = new Body({
     mass: 2,
     shape: new Box(
@@ -80,8 +78,6 @@ export function board(scene: Scene, world: World): PhysicalObject {
   })
   body.allowSleep = true
   body
-
-  world.addBody(body)
 
   return { model, body }
 }

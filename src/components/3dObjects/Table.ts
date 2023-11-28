@@ -1,6 +1,5 @@
-import { Body, Box, Cylinder, Vec3, World } from "cannon-es"
+import { Body, Box, Cylinder, Vec3 } from "cannon-es"
 import {
-  Scene,
   Vector3,
   Mesh,
   CylinderGeometry,
@@ -28,7 +27,7 @@ const params = {
   tableLegHeight: 0.9,
 }
 
-export function table(scene: Scene, world: World): PhysicalObject {
+export function table(): PhysicalObject {
   const position = new Vector3(
     0,
     -7 + (params.tableLegHeight + params.tableTopHeight) * params.scale,
@@ -92,8 +91,6 @@ export function table(scene: Scene, world: World): PhysicalObject {
   model.scale.set(params.scale, params.scale, params.scale)
   model.position.copy(position)
   model.rotateY(rotationY)
-
-  scene.add(model)
 
   const body = new Body({
     type: Body.STATIC,
@@ -176,8 +173,6 @@ export function table(scene: Scene, world: World): PhysicalObject {
   )
 
   body.quaternion.setFromEuler(0, rotationY, 0)
-
-  world.addBody(body)
 
   return { model, body }
 }

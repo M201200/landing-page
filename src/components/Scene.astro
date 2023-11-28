@@ -1,0 +1,49 @@
+<div class="container">
+  <canvas></canvas>
+</div>
+
+<style>
+  .container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: sans-serif;
+  }
+
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+</style>
+
+<script>
+  import {
+    renderEnvironment,
+    scene,
+    world,
+    updateSceneSize,
+  } from "./logic/renderEnvironment.ts"
+
+  import { dice } from "./3dObjects/Dice.ts"
+  import { board } from "./3dObjects/Board.ts"
+  import { table } from "./3dObjects/Table.ts"
+  import { jigsaw } from "./demos/Jigsaw.ts"
+  import { boardGamePiece } from "./3dObjects/BoardGamePiece"
+
+  const Table = table()
+  const Dice = dice()
+  const Jigsaw = jigsaw()
+
+  renderEnvironment({
+    staticObjects: [Table],
+    // objects: [Dice],
+    objectArrays: [Jigsaw],
+  })
+  window.addEventListener("resize", updateSceneSize)
+</script>

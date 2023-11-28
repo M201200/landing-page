@@ -14,25 +14,23 @@ type PhysicalObject = {
   body: Body
 }
 
-export function jigsaw(scene: Scene, world: World): PhysicalObject[] {
+const textureLoader = new TextureLoader()
+const texture = textureLoader.load("/public/images/nature.jpg")
+texture.colorSpace = SRGBColorSpace
+texture.wrapS = texture.wrapT = RepeatWrapping
+
+const pieceScale = 1
+const columns = 5
+const rows = 5
+
+const jigsawRadiusX = (pieceScale * columns) / 2 - pieceScale / 2
+const jigsawRadiusZ = (pieceScale * rows) / 2 - pieceScale / 2
+
+const textureOffsetX = 1 / columns
+const textureOffsetY = 1 / rows
+
+export function jigsaw(): PhysicalObject[] {
   let jigsaw: PhysicalObject[] = []
-  const textureLoader = new TextureLoader()
-
-  const texture = textureLoader.load("/public/images/nature.jpg")
-  texture.colorSpace = SRGBColorSpace
-  texture.wrapS = texture.wrapT = RepeatWrapping
-  texture.repeat.set(1, 1)
-  texture.offset.set(0, 0)
-
-  const pieceScale = 1
-  const columns = 5
-  const rows = 5
-
-  const jigsawRadiusX = (pieceScale * columns) / 2 - pieceScale / 2
-  const jigsawRadiusZ = (pieceScale * rows) / 2 - pieceScale / 2
-
-  const textureOffsetX = 1 / columns
-  const textureOffsetY = 1 / rows
 
   const topLeftCornerTexture = texture.clone()
   topLeftCornerTexture.repeat.set(textureOffsetX, textureOffsetY)
@@ -177,10 +175,10 @@ export function jigsaw(scene: Scene, world: World): PhysicalObject[] {
     }
   }
 
-  jigsaw.forEach((object) => {
-    scene.add(object.model)
-    world.addBody(object.body)
-  })
+  // jigsaw.forEach((object) => {
+  //   scene.add(object.model)
+  //   world.addBody(object.body)
+  // })
 
   return jigsaw
 }

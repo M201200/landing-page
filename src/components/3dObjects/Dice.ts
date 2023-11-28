@@ -5,7 +5,6 @@ import {
   Mesh,
   MeshStandardMaterial,
   PlaneGeometry,
-  Scene,
   Vector3,
 } from "three"
 import {
@@ -13,7 +12,7 @@ import {
   mergeGeometries,
 } from "three/addons/utils/BufferGeometryUtils.js"
 
-import { Vec3, Body, Box, World } from "cannon-es"
+import { Vec3, Body, Box } from "cannon-es"
 
 type PhysicalObject = {
   model: Group | Mesh
@@ -28,15 +27,12 @@ const params = {
   scale: 0.4,
 }
 
-const diceModel = createDiceMesh()
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////
-////////////////////////////////////////////////////
-
-export function dice(scene: Scene, world: World): PhysicalObject {
-  const model = diceModel.clone()
+export function dice(): PhysicalObject {
+  const model = createDiceModel().clone()
   model.scale.set(params.scale, params.scale, params.scale)
-  scene.add(model)
 
   const body = new Body({
     mass: 0.3,
@@ -46,15 +42,13 @@ export function dice(scene: Scene, world: World): PhysicalObject {
     sleepTimeLimit: 0.02,
   })
 
-  world.addBody(body)
-
   return { model, body }
 }
 
-////////////////////////////////////////////////////
-////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function createBoxGeometry() {
+function createDiceGeometry() {
   let boxGeometry = new BoxGeometry(
     1,
     1,
@@ -160,7 +154,7 @@ function createBoxGeometry() {
   return diceGeometry
 }
 
-function createInnerGeometry() {
+function createInnerDiceGeometry() {
   const baseGeometry = new PlaneGeometry(
     1 - 2 * params.edgeRadius,
     1 - 2 * params.edgeRadius
@@ -191,22 +185,22 @@ function createInnerGeometry() {
   )
 }
 
-function createDiceMesh() {
-  const boxMaterialOuter = new MeshStandardMaterial({
+function createDiceModel() {
+  const DiceMaterialOuter = new MeshStandardMaterial({
     color: 0xeeeeee,
   })
-  const boxMaterialInner = new MeshStandardMaterial({
+  const DiceMaterialInner = new MeshStandardMaterial({
     color: 0x000000,
     roughness: 0,
     metalness: 1,
     side: DoubleSide,
   })
 
-  const diceMesh = new Group()
-  const innerMesh = new Mesh(createInnerGeometry(), boxMaterialInner)
-  const outerMesh = new Mesh(createBoxGeometry(), boxMaterialOuter)
+  const diceModel = new Group()
+  const innerMesh = new Mesh(createInnerDiceGeometry(), DiceMaterialInner)
+  const outerMesh = new Mesh(createDiceGeometry(), DiceMaterialOuter)
   outerMesh.castShadow = true
-  diceMesh.add(innerMesh, outerMesh)
+  diceModel.add(innerMesh, outerMesh)
 
-  return diceMesh
+  return diceModel
 }

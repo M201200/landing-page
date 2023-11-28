@@ -9,7 +9,7 @@ import {
 } from "three"
 
 type PuzzlePiece = {
-  texture?: Texture
+  texture: Texture
   corner?: boolean
   side?: boolean
   oppositeSide?: boolean
@@ -108,12 +108,10 @@ export function puzzlePiece({
   geometry.translate(-0.5 * size, -0.5 * size, 0 * size)
 
   const material = [
-    texture
-      ? new MeshStandardMaterial({
-          map: texture,
-          lightMap: texture,
-        })
-      : new MeshStandardMaterial({ color: 0xeeeeee }),
+    new MeshStandardMaterial({
+      map: texture,
+      lightMap: texture,
+    }),
     new MeshStandardMaterial({ color: 0xeeeeee }),
     new MeshStandardMaterial({ color: 0xeeeeee }),
   ]

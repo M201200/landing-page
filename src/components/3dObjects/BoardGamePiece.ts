@@ -1,11 +1,10 @@
-import { Body, Cylinder, Quaternion, Sphere, Vec3, type World } from "cannon-es"
+import { Body, Cylinder, Sphere, Vec3 } from "cannon-es"
 import {
   CylinderGeometry,
   Group,
   Mesh,
   SphereGeometry,
   MeshStandardMaterial,
-  Scene,
 } from "three"
 
 type PhysicalObject = {
@@ -14,9 +13,7 @@ type PhysicalObject = {
 }
 
 export function boardGamePiece(
-  scene: Scene,
-  world: World,
-  color = "0xeeeeee",
+  color = 0xeeeeee,
   paramsScale = 0.1
 ): PhysicalObject {
   const params = {
@@ -78,8 +75,6 @@ export function boardGamePiece(
   const model = new Group()
   model.add(pieceBasisMesh, pieceBodyMesh, pieceApexMesh)
 
-  scene.add(model)
-
   const body = new Body({
     mass: 1,
     allowSleep: true,
@@ -117,8 +112,6 @@ export function boardGamePiece(
     model.quaternion.z,
     model.quaternion.w
   )
-
-  world.addBody(body)
 
   return { model, body }
 }

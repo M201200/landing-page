@@ -1,10 +1,9 @@
-import { Body, type World } from "cannon-es"
+import { Body } from "cannon-es"
 import {
   TextureLoader,
   Group,
   SRGBColorSpace,
   RepeatWrapping,
-  type Scene,
   Mesh,
 } from "three"
 import { puzzlePiece } from "../3dObjects/PuzzlePiece"
@@ -19,6 +18,9 @@ const texture = textureLoader.load("/public/images/nature.jpg")
 texture.colorSpace = SRGBColorSpace
 texture.wrapS = texture.wrapT = RepeatWrapping
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const pieceScale = 1
 const columns = 5
 const rows = 5
@@ -29,6 +31,9 @@ const jigsawRadiusZ = (pieceScale * rows) / 2 - pieceScale / 2
 const textureOffsetX = 1 / columns
 const textureOffsetY = 1 / rows
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export function jigsaw(): PhysicalObject[] {
   let jigsaw: PhysicalObject[] = []
 
@@ -37,20 +42,20 @@ export function jigsaw(): PhysicalObject[] {
   topLeftCornerTexture.offset.set(0, -textureOffsetY)
   topLeftCornerTexture.rotation = 0
 
-  const bottomLeftCornerTexture = texture.clone()
-  bottomLeftCornerTexture.repeat.set(textureOffsetX, textureOffsetY)
-  bottomLeftCornerTexture.offset.set(textureOffsetX, 0)
-  bottomLeftCornerTexture.rotation = -1.5708
+  const topRightCornerTexture = texture.clone()
+  topRightCornerTexture.repeat.set(textureOffsetX, textureOffsetY)
+  topRightCornerTexture.offset.set(-textureOffsetX, 0)
+  topRightCornerTexture.rotation = 1.5708
 
   const bottomRightCornerTexture = texture.clone()
   bottomRightCornerTexture.repeat.set(textureOffsetX, textureOffsetY)
   bottomRightCornerTexture.offset.set(0, textureOffsetY)
   bottomRightCornerTexture.rotation = 1.5708 * 2
 
-  const topRightCornerTexture = texture.clone()
-  topRightCornerTexture.repeat.set(textureOffsetX, textureOffsetY)
-  topRightCornerTexture.offset.set(-textureOffsetX, 0)
-  topRightCornerTexture.rotation = 1.5708
+  const bottomLeftCornerTexture = texture.clone()
+  bottomLeftCornerTexture.repeat.set(textureOffsetX, textureOffsetY)
+  bottomLeftCornerTexture.offset.set(textureOffsetX, 0)
+  bottomLeftCornerTexture.rotation = -1.5708
 
   jigsaw.push(
     puzzlePiece({
@@ -61,14 +66,16 @@ export function jigsaw(): PhysicalObject[] {
       posZ: -jigsawRadiusZ,
       rotZ: 0,
     }),
+
     puzzlePiece({
       scale: pieceScale,
-      texture: bottomLeftCornerTexture,
+      texture: topRightCornerTexture,
       corner: true,
-      posX: -jigsawRadiusX,
-      posZ: jigsawRadiusZ,
-      rotZ: 1.5708,
+      posX: jigsawRadiusX,
+      posZ: -jigsawRadiusZ,
+      rotZ: -1.5708,
     }),
+
     puzzlePiece({
       scale: pieceScale,
       texture: bottomRightCornerTexture,
@@ -77,13 +84,14 @@ export function jigsaw(): PhysicalObject[] {
       posZ: jigsawRadiusZ,
       rotZ: 1.5708 * 2,
     }),
+
     puzzlePiece({
       scale: pieceScale,
-      texture: topRightCornerTexture,
+      texture: bottomLeftCornerTexture,
       corner: true,
-      posX: jigsawRadiusX,
-      posZ: -jigsawRadiusZ,
-      rotZ: -1.5708,
+      posX: -jigsawRadiusX,
+      posZ: jigsawRadiusZ,
+      rotZ: 1.5708,
     })
   )
 
@@ -92,11 +100,6 @@ export function jigsaw(): PhysicalObject[] {
     topSideTexture.repeat.set(textureOffsetX, textureOffsetY)
     topSideTexture.offset.set((i + 1) * textureOffsetX, -textureOffsetY)
     topSideTexture.rotation = 0
-
-    const bottomSideTexture = texture.clone()
-    bottomSideTexture.repeat.set(textureOffsetX, textureOffsetY)
-    bottomSideTexture.offset.set((i + 2) * textureOffsetX, textureOffsetY)
-    bottomSideTexture.rotation = 1.5708 * 2
 
     jigsaw.push(
       puzzlePiece({
@@ -108,6 +111,31 @@ export function jigsaw(): PhysicalObject[] {
         rotZ: 0,
       })
     )
+  }
+
+  for (let i = 0; i < rows - 2; i++) {
+    const rightSideTexture = texture.clone()
+    rightSideTexture.repeat.set(textureOffsetX, textureOffsetY)
+    rightSideTexture.offset.set(-textureOffsetX, (i + 2) * textureOffsetY)
+    rightSideTexture.rotation = 1.5708
+
+    jigsaw.push(
+      puzzlePiece({
+        scale: pieceScale,
+        texture: rightSideTexture,
+        oppositeSide: true,
+        posX: jigsawRadiusX,
+        posZ: jigsawRadiusZ - pieceScale - i * pieceScale,
+        rotZ: -1.5708,
+      })
+    )
+  }
+
+  for (let i = 0; i < columns - 2; i++) {
+    const bottomSideTexture = texture.clone()
+    bottomSideTexture.repeat.set(textureOffsetX, textureOffsetY)
+    bottomSideTexture.offset.set((i + 2) * textureOffsetX, textureOffsetY)
+    bottomSideTexture.rotation = 1.5708 * 2
 
     jigsaw.push(
       puzzlePiece({
@@ -127,11 +155,6 @@ export function jigsaw(): PhysicalObject[] {
     leftSideTexture.offset.set(textureOffsetX, (i + 1) * textureOffsetY)
     leftSideTexture.rotation = -1.5708
 
-    const rightSideTexture = texture.clone()
-    rightSideTexture.repeat.set(textureOffsetX, textureOffsetY)
-    rightSideTexture.offset.set(-textureOffsetX, (i + 2) * textureOffsetY)
-    rightSideTexture.rotation = 1.5708
-
     jigsaw.push(
       puzzlePiece({
         scale: pieceScale,
@@ -140,17 +163,6 @@ export function jigsaw(): PhysicalObject[] {
         posX: -jigsawRadiusX,
         posZ: jigsawRadiusZ - pieceScale - i * pieceScale,
         rotZ: 1.5708,
-      })
-    )
-
-    jigsaw.push(
-      puzzlePiece({
-        scale: pieceScale,
-        texture: rightSideTexture,
-        oppositeSide: true,
-        posX: jigsawRadiusX,
-        posZ: jigsawRadiusZ - pieceScale - i * pieceScale,
-        rotZ: -1.5708,
       })
     )
   }
@@ -174,11 +186,6 @@ export function jigsaw(): PhysicalObject[] {
       )
     }
   }
-
-  // jigsaw.forEach((object) => {
-  //   scene.add(object.model)
-  //   world.addBody(object.body)
-  // })
 
   return jigsaw
 }

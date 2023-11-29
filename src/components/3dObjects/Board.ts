@@ -18,8 +18,8 @@ type PhysicalObject = {
 const params = {
   size: 7,
   depth: 0.05,
-  segmentsFront: 40,
-  segmentsEdge: 10,
+  segmentsFront: 1,
+  segmentsEdge: 1,
 }
 
 export function board(): PhysicalObject {
@@ -35,7 +35,6 @@ export function board(): PhysicalObject {
   )
 
   const texture = textureLoader.load("./public/assets/game-min.jpg")
-
   texture.colorSpace = SRGBColorSpace
 
   const boardMaterial = [

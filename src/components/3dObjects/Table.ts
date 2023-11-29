@@ -97,7 +97,7 @@ export function table(): PhysicalObject {
     shape: new Cylinder(
       (params.tableTopRadius + 0.02) * params.scale,
       (params.tableTopRadius + 0.02) * params.scale,
-      (params.tableTopHeight + 0.04) * params.scale,
+      (params.tableTopHeight + 0.025) * params.scale,
       params.tableTopSegments
     ),
     position: new Vec3(position.x, position.y, position.z),
@@ -106,7 +106,7 @@ export function table(): PhysicalObject {
     new Cylinder(
       (params.tableTopRadius + 0.02) * params.scale,
       (params.tableTopRadius + 0.02) * params.scale,
-      (params.tableTopHeight + 0.04) * params.scale,
+      (params.tableTopHeight + 0.025) * params.scale,
       params.tableTopSegments
     ),
     new Vec3(

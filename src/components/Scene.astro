@@ -2,6 +2,36 @@
   <canvas></canvas>
 </div>
 
+<script>
+  import {
+    renderEnvironment,
+    updateSceneSize,
+  } from "./logic/renderEnvironment.ts"
+
+  import { dice } from "./3dObjects/Dice.ts"
+  import { board } from "./3dObjects/Board.ts"
+  import { table } from "./3dObjects/Table.ts"
+  import { jigsaw } from "./complexObjects/Jigsaw.ts"
+  import { boardGamePiece } from "./3dObjects/BoardGamePiece"
+  import { puzzlePiece } from "./3dObjects/PuzzlePiece"
+  import { gameCard } from "./3dObjects/GameCard"
+  import { cardDeck } from "./complexObjects/CardDeck"
+
+  window.addEventListener("resize", updateSceneSize)
+
+  const Table = table()
+  // const Dice = dice()
+  // const Jigsaw = jigsaw()
+  // const puzzle = puzzlePiece({})
+  // const Board = board()
+  const CardDeck = cardDeck()
+
+  renderEnvironment({
+    staticObjects: [Table],
+    objectArrays: [CardDeck],
+  })
+</script>
+
 <style>
   .container {
     position: absolute;
@@ -21,29 +51,3 @@
     left: 0;
   }
 </style>
-
-<script>
-  import {
-    renderEnvironment,
-    scene,
-    world,
-    updateSceneSize,
-  } from "./logic/renderEnvironment.ts"
-
-  import { dice } from "./3dObjects/Dice.ts"
-  import { board } from "./3dObjects/Board.ts"
-  import { table } from "./3dObjects/Table.ts"
-  import { jigsaw } from "./demos/Jigsaw.ts"
-  import { boardGamePiece } from "./3dObjects/BoardGamePiece"
-
-  const Table = table()
-  const Dice = dice()
-  const Jigsaw = jigsaw()
-
-  renderEnvironment({
-    staticObjects: [Table],
-    // objects: [Dice],
-    objectArrays: [Jigsaw],
-  })
-  window.addEventListener("resize", updateSceneSize)
-</script>

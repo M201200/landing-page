@@ -1,11 +1,5 @@
-import type { Group, Mesh } from "three"
-
-import { Vec3, type Body } from "cannon-es"
-
-type PhysicalObject = {
-  model: Group | Mesh
-  body: Body
-}
+import { Vec3 } from "cannon-es"
+import type { PhysicalObject } from "../../types/3dObjects"
 
 export function addDiceEvents(dice: PhysicalObject) {
   dice.body.addEventListener("sleep", (e: Event) => {

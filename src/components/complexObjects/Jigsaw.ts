@@ -1,17 +1,8 @@
-import { Body } from "cannon-es"
-import {
-  TextureLoader,
-  Group,
-  SRGBColorSpace,
-  RepeatWrapping,
-  Mesh,
-} from "three"
-import { puzzlePiece } from "../3dObjects/PuzzlePiece"
+import { TextureLoader, SRGBColorSpace, RepeatWrapping } from "three"
 
-type PhysicalObject = {
-  model: Group | Mesh
-  body: Body
-}
+import type { PhysicalObject } from "../../types/3dObjects"
+
+import { puzzlePiece } from "../3dObjects/PuzzlePiece"
 
 const textureLoader = new TextureLoader()
 const texture = textureLoader.load("/public/images/nature.jpg")

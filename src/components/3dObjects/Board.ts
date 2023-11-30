@@ -5,15 +5,11 @@ import {
   SRGBColorSpace,
   TextureLoader,
   Vector3,
-  Group,
 } from "three"
 
 import { Body, Box, Quaternion, Vec3 } from "cannon-es"
 
-type PhysicalObject = {
-  model: Group | Mesh
-  body: Body
-}
+import type { PhysicalObject } from "../../types/3dObjects"
 
 const params = {
   size: 7,

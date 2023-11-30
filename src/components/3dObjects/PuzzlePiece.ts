@@ -7,6 +7,7 @@ import {
   ExtrudeGeometry,
   Texture,
 } from "three"
+import type { PhysicalObject } from "../../types/3dObjects"
 
 type PuzzlePiece = {
   texture?: Texture
@@ -23,11 +24,6 @@ type PuzzlePiece = {
 }
 
 type Path = [number, number, number, number, number, number, boolean?, number?]
-
-type PhysicalObject = {
-  model: Group | Mesh
-  body: Body
-}
 
 export function puzzlePiece({
   texture,

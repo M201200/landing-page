@@ -11,13 +11,9 @@ import {
   mergeVertices,
   mergeGeometries,
 } from "three/addons/utils/BufferGeometryUtils.js"
-
 import { Vec3, Body, Box } from "cannon-es"
 
-type PhysicalObject = {
-  model: Group | Mesh
-  body: Body
-}
+import type { PhysicalObject } from "../../types/3dObjects"
 
 const params = {
   segments: 35,

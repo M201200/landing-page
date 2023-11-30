@@ -8,13 +8,9 @@ import {
   MeshStandardMaterial,
   Group,
 } from "three"
+import type { PhysicalObject } from "../../types/3dObjects"
 
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js"
-
-type PhysicalObject = {
-  model: Group | Mesh
-  body: Body
-}
 
 const params = {
   scale: 5,

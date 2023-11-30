@@ -10,15 +10,11 @@ import {
   Vector3,
   WebGLRenderer,
 } from "three"
-
 import { World, Body, Plane, Vec3 } from "cannon-es"
 import { OrbitControls } from "three/addons/controls/OrbitControls.js"
 import CannonDebugger from "cannon-es-debugger"
 
-type PhysicalObject = {
-  model: Group | Mesh
-  body: Body
-}
+import type { PhysicalObject } from "../../types/3dObjects"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

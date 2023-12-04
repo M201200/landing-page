@@ -12,7 +12,7 @@ import {
 import { Body, Box, Quaternion, Vec3 } from "cannon-es"
 import type { PhysicalObject } from "../../types/3dObjects"
 
-import { cardBackgroundTemplate } from "../CardBackgroundTemplate.ts"
+import { cardBackgroundTemplate } from "../templates/CardBackgroundTemplate.ts"
 
 type GameCard = {
   faceColor: string

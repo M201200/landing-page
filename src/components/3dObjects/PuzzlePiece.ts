@@ -1,4 +1,4 @@
-import { Body, Box, Cylinder, Quaternion, Vec3 } from "cannon-es"
+import { Body, Box, Cylinder, Material, Quaternion, Vec3 } from "cannon-es"
 import {
   Group,
   MeshStandardMaterial,
@@ -7,9 +7,11 @@ import {
   ExtrudeGeometry,
   Texture,
 } from "three"
-import type { PhysicalObject } from "../../types/3dObjects"
+import type { JigsawPiece } from "../../types/3dObjects"
 
 type PuzzlePiece = {
+  column?: number
+  row?: number
   texture?: Texture
   corner?: boolean
   side?: boolean
@@ -25,7 +27,13 @@ type PuzzlePiece = {
 
 type Path = [number, number, number, number, number, number, boolean?, number?]
 
+export const pieceSize = 1 // DO NOT TOUCH! Values other than 1 will broke texture offset!
+export const pieceDepth = pieceSize * 0.001
+export const pieceOffset = pieceSize * 0.25
+
 export function puzzlePiece({
+  column = 0,
+  row = 0,
   texture,
   corner = false,
   side = false,
@@ -37,23 +45,27 @@ export function puzzlePiece({
   rotX = -1.5708,
   rotY = 0,
   rotZ = 0,
-}: PuzzlePiece): PhysicalObject {
-  const size = 1 // DO NOT TOUCH! Values other than 1 will broke texture offset!
-  const depth = size * 0.001
-  const offset = size * 0.25
-
+}: PuzzlePiece): JigsawPiece {
   const upperRecess: Path =
     corner || side || oppositeSide
       ? [0, 0, 0, 0, 0, 0]
-      : [-offset, -offset * 0.05, offset * 0.85, size * 0.25, 0, 3.14159, true]
+      : [
+          -pieceOffset,
+          -pieceOffset * 0.05,
+          pieceOffset * 0.85,
+          pieceSize * 0.25,
+          0,
+          3.14159,
+          true,
+        ]
 
   const sideRecess: Path = corner
     ? [0, 0, 0, 0, 0, 0]
     : [
-        offset * 0.05,
-        -offset,
-        size * 0.25,
-        offset * 0.85,
+        pieceOffset * 0.05,
+        -pieceOffset,
+        pieceSize * 0.25,
+        pieceOffset * 0.85,
         1.5708,
         -1.5708,
         true,
@@ -61,47 +73,63 @@ export function puzzlePiece({
 
   const bottomNotch: Path =
     corner || oppositeSide
-      ? [offset, offset * 0.05, offset * 0.85, size * 0.25, 3.14159, 0, true]
-      : [offset, -offset * 0.05, offset * 0.85, size * 0.25, 3.14159, 0, false]
+      ? [
+          pieceOffset,
+          pieceOffset * 0.05,
+          pieceOffset * 0.85,
+          pieceSize * 0.25,
+          3.14159,
+          0,
+          true,
+        ]
+      : [
+          pieceOffset,
+          -pieceOffset * 0.05,
+          pieceOffset * 0.85,
+          pieceSize * 0.25,
+          3.14159,
+          0,
+          false,
+        ]
 
   const puzzleShape = new Shape()
     .moveTo(0, 0)
-    .lineTo(size * 0.5 - offset, 0)
+    .lineTo(pieceSize * 0.5 - pieceOffset, 0)
     .ellipse(...bottomNotch)
-    .lineTo(size * 0.5 + offset, 0)
-    .lineTo(size, 0)
-    .lineTo(size, size * 0.5 - offset)
+    .lineTo(pieceSize * 0.5 + pieceOffset, 0)
+    .lineTo(pieceSize, 0)
+    .lineTo(pieceSize, pieceSize * 0.5 - pieceOffset)
     .ellipse(
-      offset * 0.05,
-      offset,
-      size * 0.25,
-      offset * 0.85,
+      pieceOffset * 0.05,
+      pieceOffset,
+      pieceSize * 0.25,
+      pieceOffset * 0.85,
       -1.5708,
       1.5708,
       false
     )
-    .lineTo(size, size * 0.5 + offset)
-    .lineTo(size, size)
-    .lineTo(size * 0.5 + offset, size)
+    .lineTo(pieceSize, pieceSize * 0.5 + pieceOffset)
+    .lineTo(pieceSize, pieceSize)
+    .lineTo(pieceSize * 0.5 + pieceOffset, pieceSize)
     .ellipse(...upperRecess)
-    .lineTo(size * 0.5 - offset, size)
-    .lineTo(0, size)
-    .lineTo(0, size * 0.5 + offset)
+    .lineTo(pieceSize * 0.5 - pieceOffset, pieceSize)
+    .lineTo(0, pieceSize)
+    .lineTo(0, pieceSize * 0.5 + pieceOffset)
     .ellipse(...sideRecess)
-    .lineTo(0, size * 0.5 - offset)
+    .lineTo(0, pieceSize * 0.5 - pieceOffset)
     .lineTo(0, 0)
 
   const geometry = new ExtrudeGeometry(puzzleShape, {
     curveSegments: 24,
-    depth: depth,
+    depth: pieceDepth,
     bevelEnabled: true,
     bevelSegments: 4,
     steps: 1,
-    bevelSize: size * 0.004,
-    bevelThickness: size * 0.024,
+    bevelSize: pieceSize * 0.004,
+    bevelThickness: pieceSize * 0.024,
   })
 
-  geometry.translate(-0.5 * size, -0.5 * size, 0 * size)
+  geometry.translate(-0.5 * pieceSize, -0.5 * pieceSize, 0 * pieceSize)
 
   const material = [
     texture
@@ -135,9 +163,10 @@ export function puzzlePiece({
   model.receiveShadow = true
 
   const body = new Body({
-    mass: 1,
+    mass: 0.2,
     allowSleep: true,
-    sleepTimeLimit: 1,
+    sleepTimeLimit: 0.4,
+    material: new Material({ restitution: 0, friction: 1 }),
   })
 
   function addBox({
@@ -154,24 +183,24 @@ export function puzzlePiece({
     return body.addShape(
       new Box(
         new Vec3(
-          (size * scale) / sizeX,
-          (size * scale) / sizeY,
-          depth * scale * 25
+          (pieceSize * scale) / sizeX,
+          (pieceSize * scale) / sizeY,
+          pieceDepth * scale * 25
         )
       ),
-      new Vec3(posX * size * scale, posY * size * scale, 0)
+      new Vec3(posX * pieceSize * scale, posY * pieceSize * scale, 0)
     )
   }
 
   function addCylinder({ posX, posY }: { posX: number; posY: number }) {
     return body.addShape(
       new Cylinder(
-        0.208 * size * scale,
-        0.208 * size * scale,
-        depth * scale * 50,
+        0.2 * pieceSize * scale,
+        0.2 * pieceSize * scale,
+        pieceDepth * scale * 50,
         20
       ),
-      new Vec3(posX * size * scale, posY * size * scale, 0),
+      new Vec3(posX * pieceSize * scale, posY * pieceSize * scale, 0),
       new Quaternion(0.7071, 0, 0, 0.7071)
     )
   }
@@ -213,5 +242,5 @@ export function puzzlePiece({
     model.quaternion.w
   )
 
-  return { model, body }
+  return { model, body, column, row }
 }

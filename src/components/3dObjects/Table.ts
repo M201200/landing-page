@@ -1,4 +1,4 @@
-import { Body, Box, Cylinder, Vec3 } from "cannon-es"
+import { Body, Box, Cylinder, Material, Vec3 } from "cannon-es"
 import {
   Vector3,
   Mesh,
@@ -14,7 +14,7 @@ import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js"
 
 const params = {
   scale: 5,
-  tableTopRadius: 1,
+  tableTopRadius: 1.2,
   tableTopHeight: 0.04,
   tableTopSegments: 32,
   tableBorderRadialSegments: 13,
@@ -22,6 +22,11 @@ const params = {
   tableLegSize: 0.06,
   tableLegHeight: 0.9,
 }
+
+export const tableHeight =
+  -7 +
+  (params.tableLegHeight + params.tableTopHeight) * params.scale +
+  params.tableTopHeight * params.scale
 
 export function table(): PhysicalObject {
   const position = new Vector3(
@@ -53,10 +58,10 @@ export function table(): PhysicalObject {
     return mergeGeometries(
       [
         tableBorder.clone().rotateX(1.5708),
-        tableLeg.clone().translate(-1, -0.45, 0),
-        tableLeg.clone().translate(1, -0.45, 0),
-        tableLeg.clone().translate(0, -0.45, 1),
-        tableLeg.clone().translate(0, -0.45, -1),
+        tableLeg.clone().translate(-1 * params.tableTopRadius, -0.45, 0),
+        tableLeg.clone().translate(1 * params.tableTopRadius, -0.45, 0),
+        tableLeg.clone().translate(0, -0.45, 1 * params.tableTopRadius),
+        tableLeg.clone().translate(0, -0.45, -1 * params.tableTopRadius),
         tableBorder.clone().rotateX(1.5708).translate(0, -0.9, 0),
       ],
       false
@@ -90,6 +95,7 @@ export function table(): PhysicalObject {
 
   const body = new Body({
     type: Body.STATIC,
+    material: new Material({ restitution: 0, friction: 0.8 }),
     shape: new Cylinder(
       (params.tableTopRadius + 0.02) * params.scale,
       (params.tableTopRadius + 0.02) * params.scale,
@@ -120,7 +126,7 @@ export function table(): PhysicalObject {
       )
     ),
     new Vec3(
-      1 * params.scale,
+      1 * params.scale * params.tableTopRadius,
       (-(params.tableLegHeight + params.tableTopHeight) * params.scale) / 2,
       0
     )
@@ -134,7 +140,7 @@ export function table(): PhysicalObject {
       )
     ),
     new Vec3(
-      -1 * params.scale,
+      -1 * params.scale * params.tableTopRadius,
       (-(params.tableLegHeight + params.tableTopHeight) * params.scale) / 2,
       0
     )
@@ -150,7 +156,7 @@ export function table(): PhysicalObject {
     new Vec3(
       0,
       (-(params.tableLegHeight + params.tableTopHeight) * params.scale) / 2,
-      1 * params.scale
+      1 * params.scale * params.tableTopRadius
     )
   )
   body.addShape(
@@ -164,7 +170,7 @@ export function table(): PhysicalObject {
     new Vec3(
       0,
       (-(params.tableLegHeight + params.tableTopHeight) * params.scale) / 2,
-      -1 * params.scale
+      -1 * params.scale * params.tableTopRadius
     )
   )
 

@@ -7,11 +7,11 @@ import {
   Vector3,
 } from "three"
 
-import { Body, Box, Quaternion, Vec3 } from "cannon-es"
+import { Body, Box, Material, Quaternion, Vec3 } from "cannon-es"
 
 import type { PhysicalObject } from "../../types/3dObjects"
 
-const params = {
+export const boardParams = {
   size: 7,
   depth: 0.05,
   segmentsFront: 1,
@@ -22,12 +22,12 @@ export function board(): PhysicalObject {
   const textureLoader = new TextureLoader()
 
   const BoxGeo = new BoxGeometry(
-    params.size,
-    params.size,
-    params.depth,
-    params.segmentsFront,
-    params.segmentsFront,
-    params.segmentsEdge
+    boardParams.size,
+    boardParams.size,
+    boardParams.depth,
+    boardParams.segmentsFront,
+    boardParams.segmentsFront,
+    boardParams.segmentsEdge
   )
 
   const texture = textureLoader.load("./public/assets/game-min.jpg")
@@ -58,9 +58,14 @@ export function board(): PhysicalObject {
   model.rotation.set(rotation.x, rotation.y, rotation.z)
 
   const body = new Body({
-    mass: 2,
+    mass: 5,
+    material: new Material({ restitution: 0 }),
     shape: new Box(
-      new Vec3(params.size / 2, params.size / 2, params.depth / 2)
+      new Vec3(
+        boardParams.size / 2,
+        boardParams.size / 2,
+        boardParams.depth / 2
+      )
     ),
     position: new Vec3(model.position.x, model.position.y, model.position.z),
     quaternion: new Quaternion(
@@ -69,10 +74,10 @@ export function board(): PhysicalObject {
       model.quaternion.z,
       model.quaternion.w
     ),
-    sleepTimeLimit: 1,
+    sleepTimeLimit: 0.2,
   })
   body.allowSleep = true
-  body
+  body.sleep()
 
   return { model, body }
 }

@@ -1,6 +1,5 @@
 import {
   AmbientLight,
-  Group,
   Mesh,
   PerspectiveCamera,
   PlaneGeometry,

@@ -1,4 +1,4 @@
-import { Body, Cylinder, Sphere, Vec3 } from "cannon-es"
+import { Body, Cylinder, Material, Sphere, Vec3 } from "cannon-es"
 import {
   CylinderGeometry,
   Group,
@@ -10,7 +10,7 @@ import {
 import type { PhysicalObject } from "../../types/3dObjects"
 
 export function boardGamePiece(
-  color = 0xeeeeee,
+  color = "eeeeee",
   paramsScale = 0.1
 ): PhysicalObject {
   const params = {
@@ -47,8 +47,8 @@ export function boardGamePiece(
   )
 
   const material = new MeshStandardMaterial({
-    color: color,
-    roughness: 0.4,
+    color: +`0x${color}`,
+    roughness: 0.6,
     metalness: 1,
   })
 
@@ -74,7 +74,8 @@ export function boardGamePiece(
   model.position.set(0, 3, -3)
 
   const body = new Body({
-    mass: 1,
+    mass: 0.2,
+    material: new Material({ restitution: 0 }),
     allowSleep: true,
     sleepTimeLimit: 1,
   })

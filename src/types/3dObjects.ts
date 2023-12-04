@@ -6,3 +6,7 @@ export type PhysicalObject = {
   model: Group | Mesh
   body: Body
 }
+export type JigsawPiece = PhysicalObject & {
+  column: number
+  row: number
+}

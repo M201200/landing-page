@@ -1,8 +1,8 @@
 import { TextureLoader, SRGBColorSpace, RepeatWrapping } from "three"
 
-import type { PhysicalObject } from "../../types/3dObjects"
+import type { JigsawPiece } from "../../types/3dObjects"
 
-import { puzzlePiece } from "../3dObjects/PuzzlePiece"
+import { pieceDepth, puzzlePiece } from "../3dObjects/PuzzlePiece"
 
 const textureLoader = new TextureLoader()
 const texture = textureLoader.load("/public/images/nature.jpg")
@@ -12,21 +12,18 @@ texture.wrapS = texture.wrapT = RepeatWrapping
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const pieceScale = 1
-const columns = 5
-const rows = 5
+export const pieceScale = 0.8
+export const jigsawColumns = 5
+export const jigsawRows = 5
 
-const jigsawRadiusX = (pieceScale * columns) / 2 - pieceScale / 2
-const jigsawRadiusZ = (pieceScale * rows) / 2 - pieceScale / 2
-
-const textureOffsetX = 1 / columns
-const textureOffsetY = 1 / rows
+const textureOffsetX = 1 / jigsawColumns
+const textureOffsetY = 1 / jigsawRows
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function jigsaw(): PhysicalObject[] {
-  let jigsaw: PhysicalObject[] = []
+export function jigsaw(): JigsawPiece[] {
+  let jigsaw: JigsawPiece[] = []
 
   const topLeftCornerTexture = texture.clone()
   topLeftCornerTexture.repeat.set(textureOffsetX, textureOffsetY)
@@ -53,40 +50,36 @@ export function jigsaw(): PhysicalObject[] {
       scale: pieceScale,
       texture: topLeftCornerTexture,
       corner: true,
-      posX: -jigsawRadiusX,
-      posZ: -jigsawRadiusZ,
-      rotZ: 0,
+      column: 0,
+      row: 0,
     }),
 
     puzzlePiece({
       scale: pieceScale,
       texture: topRightCornerTexture,
       corner: true,
-      posX: jigsawRadiusX,
-      posZ: -jigsawRadiusZ,
-      rotZ: -1.5708,
+      column: jigsawColumns,
+      row: 0,
     }),
 
     puzzlePiece({
       scale: pieceScale,
       texture: bottomRightCornerTexture,
       corner: true,
-      posX: jigsawRadiusX,
-      posZ: jigsawRadiusZ,
-      rotZ: 1.5708 * 2,
+      column: jigsawColumns,
+      row: jigsawRows,
     }),
 
     puzzlePiece({
       scale: pieceScale,
       texture: bottomLeftCornerTexture,
       corner: true,
-      posX: -jigsawRadiusX,
-      posZ: jigsawRadiusZ,
-      rotZ: 1.5708,
+      column: 0,
+      row: jigsawRows,
     })
   )
 
-  for (let i = 0; i < columns - 2; i++) {
+  for (let i = 0; i < jigsawColumns - 2; i++) {
     const topSideTexture = texture.clone()
     topSideTexture.repeat.set(textureOffsetX, textureOffsetY)
     topSideTexture.offset.set((i + 1) * textureOffsetX, -textureOffsetY)
@@ -97,14 +90,13 @@ export function jigsaw(): PhysicalObject[] {
         scale: pieceScale,
         texture: topSideTexture,
         side: true,
-        posX: -jigsawRadiusX + pieceScale + i * pieceScale,
-        posZ: -jigsawRadiusZ,
-        rotZ: 0,
+        column: i + 1,
+        row: 0,
       })
     )
   }
 
-  for (let i = 0; i < rows - 2; i++) {
+  for (let i = 0; i < jigsawRows - 2; i++) {
     const rightSideTexture = texture.clone()
     rightSideTexture.repeat.set(textureOffsetX, textureOffsetY)
     rightSideTexture.offset.set(-textureOffsetX, (i + 2) * textureOffsetY)
@@ -115,14 +107,13 @@ export function jigsaw(): PhysicalObject[] {
         scale: pieceScale,
         texture: rightSideTexture,
         oppositeSide: true,
-        posX: jigsawRadiusX,
-        posZ: jigsawRadiusZ - pieceScale - i * pieceScale,
-        rotZ: -1.5708,
+        column: jigsawColumns,
+        row: i + 1,
       })
     )
   }
 
-  for (let i = 0; i < columns - 2; i++) {
+  for (let i = 0; i < jigsawColumns - 2; i++) {
     const bottomSideTexture = texture.clone()
     bottomSideTexture.repeat.set(textureOffsetX, textureOffsetY)
     bottomSideTexture.offset.set((i + 2) * textureOffsetX, textureOffsetY)
@@ -133,14 +124,13 @@ export function jigsaw(): PhysicalObject[] {
         scale: pieceScale,
         texture: bottomSideTexture,
         oppositeSide: true,
-        posX: -jigsawRadiusX + pieceScale + i * pieceScale,
-        posZ: jigsawRadiusZ,
-        rotZ: 1.5708 * 2,
+        column: jigsawColumns - i - 1,
+        row: jigsawRows,
       })
     )
   }
 
-  for (let i = 0; i < rows - 2; i++) {
+  for (let i = 0; i < jigsawRows - 2; i++) {
     const leftSideTexture = texture.clone()
     leftSideTexture.repeat.set(textureOffsetX, textureOffsetY)
     leftSideTexture.offset.set(textureOffsetX, (i + 1) * textureOffsetY)
@@ -151,15 +141,14 @@ export function jigsaw(): PhysicalObject[] {
         scale: pieceScale,
         texture: leftSideTexture,
         side: true,
-        posX: -jigsawRadiusX,
-        posZ: jigsawRadiusZ - pieceScale - i * pieceScale,
-        rotZ: 1.5708,
+        column: 0,
+        row: jigsawRows - i - 1,
       })
     )
   }
 
-  for (let i = 0; i < columns - 2; i++) {
-    for (let j = 0; j < rows - 2; j++) {
+  for (let i = 0; i < jigsawColumns - 2; i++) {
+    for (let j = 0; j < jigsawRows - 2; j++) {
       const pieceTexture = texture.clone()
       pieceTexture.repeat.set(textureOffsetX, textureOffsetY)
       pieceTexture.offset.set(
@@ -170,13 +159,30 @@ export function jigsaw(): PhysicalObject[] {
         puzzlePiece({
           scale: pieceScale,
           texture: pieceTexture,
-          posX: -jigsawRadiusX + pieceScale + i * pieceScale,
-          posZ: jigsawRadiusZ - pieceScale - j * pieceScale,
-          rotZ: 0,
+          column: i + 1,
+          row: j + 1,
         })
       )
     }
   }
+
+  jigsaw.forEach((piece, idx, arr) => {
+    const totalPieces = arr.length
+    const piecesInCell = totalPieces >= 5 ? 5 : totalPieces
+    const columns = totalPieces >= 15 ? 3 : totalPieces / 3
+
+    const rowPosition = Math.ceil((idx + 1) / (columns * piecesInCell))
+    const columnPosition = Math.ceil(
+      Math.ceil((idx + 1) / piecesInCell) / rowPosition
+    )
+    const cellPosition = idx % 5
+
+    piece.body.position.set(
+      -2 + columnPosition,
+      cellPosition * pieceDepth * 50,
+      2.5 + rowPosition
+    )
+  })
 
   return jigsaw
 }

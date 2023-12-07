@@ -9,7 +9,6 @@ const jigsawRadiusZ = (pieceScale * jigsawRows) / 2 - pieceScale / 2
 export function jigsawAssemble(jigsaw: JigsawPiece[]) {
   const delay = 0.4
   const duration = 0.4
-  const puzzleHeight = tableHeight
   jigsaw.forEach((piece, idx) => {
     piece.body.sleep()
     if (
@@ -21,14 +20,14 @@ export function jigsawAssemble(jigsaw: JigsawPiece[]) {
       gsap
         .to(piece.body.position, {
           x: -jigsawRadiusX + pieceScale + (piece.column - 1) * pieceScale,
-          y: puzzleHeight + 1,
+          y: tableHeight + 1,
           z: jigsawRadiusZ - pieceScale - (piece.row - 1) * pieceScale,
         })
         .delay(delay * idx)
         .duration(duration)
       gsap
         .to(piece.body.position, {
-          y: puzzleHeight,
+          y: tableHeight,
         })
         .delay(delay * idx + duration)
         .duration(duration / 2)
@@ -38,14 +37,14 @@ export function jigsawAssemble(jigsaw: JigsawPiece[]) {
       gsap
         .to(piece.body.position, {
           x: -jigsawRadiusX + pieceScale + (piece.column - 1) * pieceScale,
-          y: puzzleHeight + 1,
+          y: tableHeight + 1,
           z: -jigsawRadiusZ,
         })
         .delay(delay * idx)
         .duration(duration)
       gsap
         .to(piece.body.position, {
-          y: puzzleHeight,
+          y: tableHeight,
         })
         .delay(delay * idx + duration)
         .duration(duration / 2)
@@ -58,14 +57,14 @@ export function jigsawAssemble(jigsaw: JigsawPiece[]) {
       gsap
         .to(piece.body.position, {
           x: jigsawRadiusX,
-          y: puzzleHeight + 1,
+          y: tableHeight + 1,
           z: jigsawRadiusZ - pieceScale - (piece.row - 1) * pieceScale,
         })
         .delay(delay * idx)
         .duration(duration)
       gsap
         .to(piece.body.position, {
-          y: puzzleHeight,
+          y: tableHeight,
         })
         .delay(delay * idx + duration)
         .duration(duration / 2)
@@ -82,14 +81,14 @@ export function jigsawAssemble(jigsaw: JigsawPiece[]) {
       gsap
         .to(piece.body.position, {
           x: jigsawRadiusX - pieceScale - (piece.column - 2) * pieceScale,
-          y: puzzleHeight + 1,
+          y: tableHeight + 1,
           z: jigsawRadiusZ,
         })
         .delay(delay * idx)
         .duration(duration)
       gsap
         .to(piece.body.position, {
-          y: puzzleHeight,
+          y: tableHeight,
         })
         .delay(delay * idx + duration)
         .duration(duration / 2)
@@ -102,14 +101,14 @@ export function jigsawAssemble(jigsaw: JigsawPiece[]) {
       gsap
         .to(piece.body.position, {
           x: -jigsawRadiusX,
-          y: puzzleHeight + 1,
+          y: tableHeight + 1,
           z: -jigsawRadiusZ + pieceScale + (piece.row - 2) * pieceScale,
         })
         .delay(delay * idx)
         .duration(duration)
       gsap
         .to(piece.body.position, {
-          y: puzzleHeight,
+          y: tableHeight,
         })
         .delay(delay * idx + duration)
         .duration(duration / 2)
@@ -123,14 +122,14 @@ export function jigsawAssemble(jigsaw: JigsawPiece[]) {
       gsap
         .to(piece.body.position, {
           x: -jigsawRadiusX,
-          y: puzzleHeight + 1,
+          y: tableHeight + 1,
           z: -jigsawRadiusZ,
         })
         .delay(delay * idx)
         .duration(duration)
       gsap
         .to(piece.body.position, {
-          y: puzzleHeight,
+          y: tableHeight,
         })
         .delay(delay * idx + duration)
         .duration(duration / 2)
@@ -139,14 +138,14 @@ export function jigsawAssemble(jigsaw: JigsawPiece[]) {
       gsap
         .to(piece.body.position, {
           x: jigsawRadiusX,
-          y: puzzleHeight + 1,
+          y: tableHeight + 1,
           z: -jigsawRadiusZ,
         })
         .delay(delay * idx)
         .duration(duration)
       gsap
         .to(piece.body.position, {
-          y: puzzleHeight,
+          y: tableHeight,
         })
         .delay(delay * idx + duration)
         .duration(duration / 2)
@@ -159,14 +158,14 @@ export function jigsawAssemble(jigsaw: JigsawPiece[]) {
       gsap
         .to(piece.body.position, {
           x: jigsawRadiusX,
-          y: puzzleHeight + 1,
+          y: tableHeight + 1,
           z: jigsawRadiusZ,
         })
         .delay(delay * idx)
         .duration(duration)
       gsap
         .to(piece.body.position, {
-          y: puzzleHeight,
+          y: tableHeight,
         })
         .delay(delay * idx + duration)
         .duration(duration / 2)
@@ -179,14 +178,14 @@ export function jigsawAssemble(jigsaw: JigsawPiece[]) {
       gsap
         .to(piece.body.position, {
           x: -jigsawRadiusX,
-          y: puzzleHeight + 1,
+          y: tableHeight + 1,
           z: jigsawRadiusZ,
         })
         .delay(delay * idx)
         .duration(duration)
       gsap
         .to(piece.body.position, {
-          y: puzzleHeight,
+          y: tableHeight,
         })
         .delay(delay * idx + duration)
         .duration(duration / 2)

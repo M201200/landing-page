@@ -10,3 +10,8 @@ export type JigsawPiece = PhysicalObject & {
   column: number
   row: number
 }
+
+export type GameCard = PhysicalObject & {
+  faceColor: string
+  number: number
+}

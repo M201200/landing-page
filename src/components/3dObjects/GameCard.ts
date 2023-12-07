@@ -9,12 +9,12 @@ import {
   Vector3,
   Group,
 } from "three"
-import { Body, Box, Quaternion, Vec3 } from "cannon-es"
-import type { PhysicalObject } from "../../types/3dObjects"
+import { Body, Box, Material, Quaternion, Vec3 } from "cannon-es"
+import type { GameCard } from "../../types/3dObjects"
 
 import { cardBackgroundTemplate } from "../templates/CardBackgroundTemplate.ts"
 
-type GameCard = {
+type GameCardProps = {
   faceColor: string
   number: number
   posX?: number
@@ -25,10 +25,10 @@ type GameCard = {
   rotZ?: number
 }
 
-const params = {
+export const gameCardParams = {
   width: 0.5,
   height: 0.75,
-  depth: 0.014,
+  depth: 0.008,
   segments: 1,
   radius: 0.4,
 }
@@ -41,20 +41,20 @@ export function gameCard({
   posX = 0,
   posY = 1,
   posZ = 0,
-  rotX = -1.5708,
+  rotX = 1.5708,
   rotY = 0,
-  rotZ = 0,
-}: GameCard): PhysicalObject {
+  rotZ = 1.5708 * 2,
+}: GameCardProps): GameCard {
   const model = new Group()
 
   const position = new Vector3(posX, posY, posZ)
   const rotation = new Vector3(rotX, rotY, rotZ)
   const CardGeo = new RoundedBoxGeometry(
-    params.width,
-    params.height,
-    params.depth,
-    params.segments,
-    params.radius
+    gameCardParams.width,
+    gameCardParams.height,
+    gameCardParams.depth,
+    gameCardParams.segments,
+    gameCardParams.radius
   )
 
   const svgStrBackdrop = cardBackgroundTemplate()
@@ -112,7 +112,7 @@ export function gameCard({
 
       const centerNumber = new Mesh(centerNumberGeo, centerNumberMaterial)
       centerNumber
-        .translateZ(params.depth / 2 + textHeight)
+        .translateZ(gameCardParams.depth / 2 + textHeight)
         .translateX(-centerNumberSize / 2.6)
         .translateY(-centerNumberSize / 2).receiveShadow = true
 
@@ -127,16 +127,20 @@ export function gameCard({
 
       const upperSideNumber = new Mesh(sideNumberGeo, sideNumberMaterial)
       upperSideNumber
-        .translateZ(params.depth / 2 + textHeight)
-        .translateX(sideNumberSize / 3.5 - params.width / 2)
-        .translateY(sideNumberSize / 2 + params.height / 4).receiveShadow = true
+        .translateZ(gameCardParams.depth / 2 + textHeight)
+        .translateX(sideNumberSize / 3.5 - gameCardParams.width / 2)
+        .translateY(
+          sideNumberSize / 2 + gameCardParams.height / 4
+        ).receiveShadow = true
 
       const bottomSideNumber = new Mesh(sideNumberGeo, sideNumberMaterial)
       bottomSideNumber
         .rotateZ(Math.PI)
-        .translateZ(params.depth / 2 + textHeight)
-        .translateX(sideNumberSize / 3.5 - params.width / 2)
-        .translateY(sideNumberSize / 2 + params.height / 4).receiveShadow = true
+        .translateZ(gameCardParams.depth / 2 + textHeight)
+        .translateX(sideNumberSize / 3.5 - gameCardParams.width / 2)
+        .translateY(
+          sideNumberSize / 2 + gameCardParams.height / 4
+        ).receiveShadow = true
 
       const backdropTextSize = 0.16
       const backdropTextGeo = new TextGeometry("RBGY", {
@@ -150,9 +154,9 @@ export function gameCard({
 
       const backdropText = new Mesh(backdropTextGeo, backdropTextMaterial)
       backdropText
-        .translateZ(-params.depth / 2 - textHeight * 2)
-        .translateX(-backdropTextSize + params.width / 1.9)
-        .translateY(-backdropTextSize / 2 - params.height / 3.8)
+        .translateZ(-gameCardParams.depth / 2 - textHeight * 2)
+        .translateX(-backdropTextSize + gameCardParams.width / 1.9)
+        .translateY(-backdropTextSize / 2 - gameCardParams.height / 3.8)
         .rotateZ(-Math.PI / 3.34)
         .rotateY(Math.PI).receiveShadow = true
 
@@ -180,12 +184,13 @@ export function gameCard({
   model.rotation.set(rotation.x, rotation.y, rotation.z)
 
   const body = new Body({
-    mass: 1,
+    mass: 0.08,
+    material: new Material({ restitution: 0, friction: 0.8 }),
     shape: new Box(
       new Vec3(
-        params.width / 2,
-        params.height / 2,
-        params.depth / 2 + textHeight * 2
+        gameCardParams.width / 2,
+        gameCardParams.height / 2,
+        gameCardParams.depth / 2 + textHeight * 2
       )
     ),
     position: new Vec3(model.position.x, model.position.y, model.position.z),
@@ -195,10 +200,10 @@ export function gameCard({
       model.quaternion.z,
       model.quaternion.w
     ),
-    sleepTimeLimit: 1,
+    sleepTimeLimit: 0.4,
   })
   body.allowSleep = true
-  body
+  body.sleep()
 
-  return { model, body }
+  return { model, body, faceColor, number }
 }

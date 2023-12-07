@@ -17,25 +17,27 @@
   import { jigsawAssemble } from "./logic/jigsawAssemble.ts"
   import { boardGame } from "./logic/boardGame.ts"
   import { boardGameBundle } from "./complexObjects/BoardGameBundle"
+  import type { PhysicalObject } from "../types/3dObjects"
+  import { cardGame } from "./logic/cardGame"
 
   window.addEventListener("resize", updateSceneSize)
 
   const Table = table()
   // const Dice = dice()
-  const Jigsaw = jigsaw()
+  // const Jigsaw = jigsaw()
   // const Board = board()
   // const gamePiece = boardGamePiece()
-  // const CardDeck = cardDeck()
+  const CardDeck = cardDeck()
   // const BoardGameBundle = boardGameBundle()
 
   renderEnvironment({
     staticObjects: [Table],
     // objects: [gamePiece],
-    objectArrays: [Jigsaw],
+    objectArrays: [CardDeck],
   })
-
+  cardGame(CardDeck)
   // boardGame(BoardGameBundle)
-  jigsawAssemble(Jigsaw)
+  // jigsawAssemble(Jigsaw)
 </script>
 
 <style>

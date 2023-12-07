@@ -13,7 +13,11 @@ import { World, Body, Plane, Vec3 } from "cannon-es"
 import { OrbitControls } from "three/addons/controls/OrbitControls.js"
 import CannonDebugger from "cannon-es-debugger"
 
-import type { PhysicalObject } from "../../types/3dObjects"
+import type {
+  GameCard,
+  JigsawPiece,
+  PhysicalObject,
+} from "../../types/3dObjects"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,7 +59,7 @@ export function renderEnvironment({
   staticObjects,
 }: {
   objects?: PhysicalObject[]
-  objectArrays?: PhysicalObject[][]
+  objectArrays?: (PhysicalObject[] | JigsawPiece[] | GameCard[])[]
   staticObjects?: PhysicalObject[]
 } = {}) {
   renderer.shadowMap.enabled = true

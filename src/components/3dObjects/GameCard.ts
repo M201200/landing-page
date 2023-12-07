@@ -95,89 +95,86 @@ export function gameCard({
 
   const textHeight = 0.0001
   const fontLoader = new FontLoader()
-  fontLoader.load(
-    "/public/assets/fonts/RobotoBlack_Italic.json",
-    (loadedFont) => {
-      const font = loadedFont
+  fontLoader.load("/assets/fonts/RobotoBlack_Italic.json", (loadedFont) => {
+    const font = loadedFont
 
-      const centerNumberSize = 0.3
-      const centerNumberGeo = new TextGeometry(number.toString(), {
-        font: font,
-        size: centerNumberSize,
-        height: textHeight,
-      })
-      const centerNumberMaterial = new MeshStandardMaterial({
-        color: +`0x${faceColor}`,
-      })
+    const centerNumberSize = 0.3
+    const centerNumberGeo = new TextGeometry(number.toString(), {
+      font: font,
+      size: centerNumberSize,
+      height: textHeight,
+    })
+    const centerNumberMaterial = new MeshStandardMaterial({
+      color: +`0x${faceColor}`,
+    })
 
-      const centerNumber = new Mesh(centerNumberGeo, centerNumberMaterial)
-      centerNumber
-        .translateZ(gameCardParams.depth / 2 + textHeight)
-        .translateX(-centerNumberSize / 2.6)
-        .translateY(-centerNumberSize / 2).receiveShadow = true
+    const centerNumber = new Mesh(centerNumberGeo, centerNumberMaterial)
+    centerNumber
+      .translateZ(gameCardParams.depth / 2 + textHeight)
+      .translateX(-centerNumberSize / 2.6)
+      .translateY(-centerNumberSize / 2).receiveShadow = true
 
-      const sideNumberSize = 0.1
-      const sideNumberGeo = new TextGeometry(number.toString(), {
-        font: font,
-        size: sideNumberSize,
-        height: textHeight,
-      })
+    const sideNumberSize = 0.1
+    const sideNumberGeo = new TextGeometry(number.toString(), {
+      font: font,
+      size: sideNumberSize,
+      height: textHeight,
+    })
 
-      const sideNumberMaterial = new MeshStandardMaterial({ color: 0xf9f7f7 })
+    const sideNumberMaterial = new MeshStandardMaterial({ color: 0xf9f7f7 })
 
-      const upperSideNumber = new Mesh(sideNumberGeo, sideNumberMaterial)
-      upperSideNumber
-        .translateZ(gameCardParams.depth / 2 + textHeight)
-        .translateX(sideNumberSize / 3.5 - gameCardParams.width / 2)
-        .translateY(
-          sideNumberSize / 2 + gameCardParams.height / 4
-        ).receiveShadow = true
+    const upperSideNumber = new Mesh(sideNumberGeo, sideNumberMaterial)
+    upperSideNumber
+      .translateZ(gameCardParams.depth / 2 + textHeight)
+      .translateX(sideNumberSize / 3.5 - gameCardParams.width / 2)
+      .translateY(
+        sideNumberSize / 2 + gameCardParams.height / 4
+      ).receiveShadow = true
 
-      const bottomSideNumber = new Mesh(sideNumberGeo, sideNumberMaterial)
-      bottomSideNumber
-        .rotateZ(Math.PI)
-        .translateZ(gameCardParams.depth / 2 + textHeight)
-        .translateX(sideNumberSize / 3.5 - gameCardParams.width / 2)
-        .translateY(
-          sideNumberSize / 2 + gameCardParams.height / 4
-        ).receiveShadow = true
+    const bottomSideNumber = new Mesh(sideNumberGeo, sideNumberMaterial)
+    bottomSideNumber
+      .rotateZ(Math.PI)
+      .translateZ(gameCardParams.depth / 2 + textHeight)
+      .translateX(sideNumberSize / 3.5 - gameCardParams.width / 2)
+      .translateY(
+        sideNumberSize / 2 + gameCardParams.height / 4
+      ).receiveShadow = true
 
-      const backdropTextSize = 0.16
-      const backdropTextGeo = new TextGeometry("RBGY", {
-        font: font,
-        size: backdropTextSize,
-        height: textHeight,
-      })
-      const backdropTextMaterial = new MeshStandardMaterial({
-        color: 0xfed500,
-      })
+    const backdropTextSize = 0.16
+    const backdropTextGeo = new TextGeometry("RBGY", {
+      font: font,
+      size: backdropTextSize,
+      height: textHeight,
+    })
+    const backdropTextMaterial = new MeshStandardMaterial({
+      color: 0xfed500,
+    })
 
-      const backdropText = new Mesh(backdropTextGeo, backdropTextMaterial)
-      backdropText
-        .translateZ(-gameCardParams.depth / 2 - textHeight * 2)
-        .translateX(-backdropTextSize + gameCardParams.width / 1.9)
-        .translateY(-backdropTextSize / 2 - gameCardParams.height / 3.8)
-        .rotateZ(-Math.PI / 3.34)
-        .rotateY(Math.PI).receiveShadow = true
+    const backdropText = new Mesh(backdropTextGeo, backdropTextMaterial)
+    backdropText
+      .translateZ(-gameCardParams.depth / 2 - textHeight * 2)
+      .translateX(-backdropTextSize + gameCardParams.width / 1.9)
+      .translateY(-backdropTextSize / 2 - gameCardParams.height / 3.8)
+      .rotateZ(-Math.PI / 3.34)
+      .rotateY(Math.PI).receiveShadow = true
 
-      const backdropTextShadowMaterial = new MeshStandardMaterial({
-        color: 0x161617,
-      })
-      const backdropTextShadow = backdropText.clone()
-      backdropTextShadow.material = backdropTextShadowMaterial
+    const backdropTextShadowMaterial = new MeshStandardMaterial({
+      color: 0x161617,
+    })
+    const backdropTextShadow = backdropText.clone()
+    backdropTextShadow.material = backdropTextShadowMaterial
+    backdropTextShadow
+      .translateZ(-0.0001)
+      .translateX(-backdropTextSize * 0.05)
+      .translateY(-backdropTextSize * 0.05)
+    model.add(
+      centerNumber,
+      upperSideNumber,
+      bottomSideNumber,
+      backdropText,
       backdropTextShadow
-        .translateZ(-0.0001)
-        .translateX(-backdropTextSize * 0.05)
-        .translateY(-backdropTextSize * 0.05)
-      model.add(
-        centerNumber,
-        upperSideNumber,
-        bottomSideNumber,
-        backdropText,
-        backdropTextShadow
-      )
-    }
-  )
+    )
+  })
 
   model.position.copy(position)
 

@@ -24,20 +24,20 @@
 
   const Table = table()
   // const Dice = dice()
-  // const Jigsaw = jigsaw()
+  const Jigsaw = jigsaw()
   // const Board = board()
   // const gamePiece = boardGamePiece()
-  const CardDeck = cardDeck()
+  // const CardDeck = cardDeck()
   // const BoardGameBundle = boardGameBundle()
 
   renderEnvironment({
     staticObjects: [Table],
     // objects: [gamePiece],
-    objectArrays: [CardDeck],
+    objectArrays: [Jigsaw],
   })
-  cardGame(CardDeck)
+  // cardGame(CardDeck)
   // boardGame(BoardGameBundle)
-  // jigsawAssemble(Jigsaw)
+  jigsawAssemble(Jigsaw)
 </script>
 
 <style>

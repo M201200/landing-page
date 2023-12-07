@@ -1,4 +1,12 @@
-import { Body, Box, Cylinder, Material, Vec3 } from "cannon-es"
+import {
+  Body,
+  Box,
+  Cylinder,
+  Material,
+  Plane,
+  Quaternion,
+  Vec3,
+} from "cannon-es"
 import {
   Vector3,
   Mesh,

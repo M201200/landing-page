@@ -1,12 +1,4 @@
-import {
-  Body,
-  Box,
-  Cylinder,
-  Material,
-  Plane,
-  Quaternion,
-  Vec3,
-} from "cannon-es"
+import { Body, Box, Cylinder, Material, Vec3 } from "cannon-es"
 import {
   Vector3,
   Mesh,
@@ -21,7 +13,7 @@ import type { PhysicalObject } from "../../types/3dObjects"
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js"
 
 const params = {
-  scale: 5,
+  scale: 3,
   tableTopRadius: 1.2,
   tableTopHeight: 0.04,
   tableTopSegments: 32,

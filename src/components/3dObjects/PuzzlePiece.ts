@@ -242,5 +242,7 @@ export function puzzlePiece({
     model.quaternion.w
   )
 
+  body.sleep()
+
   return { model, body, column, row }
 }

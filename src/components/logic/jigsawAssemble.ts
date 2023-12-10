@@ -10,7 +10,6 @@ export function jigsawAssemble(jigsaw: JigsawPiece[]) {
   const delay = 0.4
   const duration = 0.4
   jigsaw.forEach((piece, idx) => {
-    piece.body.sleep()
     if (
       piece.column > 0 &&
       piece.column < jigsawColumns &&

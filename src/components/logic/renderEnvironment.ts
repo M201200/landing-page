@@ -10,8 +10,8 @@ import {
   WebGLRenderer,
 } from "three"
 import { World, Body, Plane, Vec3 } from "cannon-es"
-import { OrbitControls } from "three/addons/controls/OrbitControls.js"
-import CannonDebugger from "cannon-es-debugger"
+// import { OrbitControls } from "three/addons/controls/OrbitControls.js"
+// import CannonDebugger from "cannon-es-debugger"
 
 import type {
   GameCard,
@@ -23,17 +23,20 @@ import type {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const canvas = document.querySelector("canvas")!
+const main = document.querySelector("main")!
+console.log(main.clientWidth / main.clientHeight)
 export const renderer = new WebGLRenderer({
   alpha: true,
   antialias: true,
   canvas: canvas,
 })
+
 export const scene = new Scene()
 export const camera = new PerspectiveCamera(
   45,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  300
+  main.clientWidth / main.clientHeight,
+  5,
+  600
 )
 export const world = new World({
   allowSleep: true,
@@ -44,8 +47,8 @@ world.defaultContactMaterial.contactEquationStiffness = 1e7
 world.defaultContactMaterial.contactEquationRelaxation = 4
 
 // @ts-ignore
-export const cannonDebugger = new CannonDebugger(scene, world)
-export const controls = new OrbitControls(camera, renderer.domElement)
+// export const cannonDebugger = new CannonDebugger(scene, world)
+// export const controls = new OrbitControls(camera, renderer.domElement)
 
 const objectsToAnimate: PhysicalObject[] = []
 const objectArraysToAnimate: PhysicalObject[][] = []
@@ -65,11 +68,11 @@ export function renderEnvironment({
   renderer.shadowMap.enabled = true
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
-  camera.position.set(0, 1.15, 1).multiplyScalar(9)
+  camera.position.set(0, 5.15, 3).multiplyScalar(26)
   camera.lookAt(0, 2, 2)
 
   updateSceneSize()
-  controls.update()
+  // controls.update()
 
   const ambientLight = new AmbientLight(0xffffff, 0.5)
   scene.add(ambientLight)
@@ -140,9 +143,9 @@ export function renderEnvironment({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function updateSceneSize() {
-  camera.aspect = window.innerWidth / window.innerHeight
+  camera.aspect = main.clientWidth / main.clientHeight
   camera.updateProjectionMatrix()
-  renderer.setSize(window.innerWidth, window.innerHeight)
+  renderer.setSize(main.clientWidth, main.clientHeight)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -185,8 +188,8 @@ function animate() {
     )
   }
 
-  cannonDebugger.update()
-  controls.update()
+  // cannonDebugger.update()
+  // controls.update()
   renderer.render(scene, camera)
   requestAnimationFrame(animate)
 }

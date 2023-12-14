@@ -13,7 +13,7 @@ let fourthDeck = 0
 export function cardGame(cardDeck: GameCard[]) {
   shuffleArray(cardDeck)
   cardDeck.forEach((card, idx) => {
-    card.body.position.y =
+    card.model.position.y =
       tableHeight +
       gameCardParams.depth * 1.1 * 40 -
       gameCardParams.depth * 1.1 * (idx + 1)
@@ -146,17 +146,17 @@ function moveCard({
   rotY = 0,
   rotZ = +Math.random().toFixed(3),
 }: AnimateCards) {
-  gsap.to(cardDeck[index].body.position, {
+  gsap.to(cardDeck[index].model.position, {
     x: posX + +Math.random().toFixed(3) / 4,
     y: tableHeight + posY,
     z: posZ + +Math.random().toFixed(3) / 4,
     duration: duration,
     delay: index * duration,
   })
-  gsap.to(cardDeck[index].body.quaternion, {
-    onUpdate: () => {
-      cardDeck[index].body.quaternion.setFromEuler(rotX, rotY, rotZ + orientZ)
-    },
+  gsap.to(cardDeck[index].model.rotation, {
+    x: rotX,
+    y: rotY,
+    z: rotZ + orientZ,
     duration: duration,
     delay: index * duration,
   })
@@ -174,31 +174,31 @@ function startGame({
   rotY = 0,
   rotZ = Math.PI / 3 - cardNumber * 0.28,
 }: AnimateCards) {
-  gsap.to(cardDeck[index].body.position, {
+  gsap.to(cardDeck[index].model.position, {
     x: posX,
     y: tableHeight + posY,
     z: posZ,
     duration: duration * 2,
     delay: cardsToDeal * duration + duration * 1.5,
   })
-  gsap.to(cardDeck[index].body.quaternion, {
-    onUpdate: () => {
-      cardDeck[index].body.quaternion.setFromEuler(Math.PI / 2, 0, 0 + orientZ)
-    },
+  gsap.to(cardDeck[index].model.quaternion, {
+    x: Math.PI / 2,
+    y: 0,
+    z: 0 + orientZ,
     duration: duration * 2,
     delay: cardsToDeal * duration + duration * 1.5,
   })
-  gsap.to(cardDeck[index].body.position, {
+  gsap.to(cardDeck[index].model.position, {
     x: posX,
     y: tableHeight + posY + 2,
     z: posZ,
     duration: duration * 2,
     delay: cardsToDeal * duration + duration * 3,
   })
-  gsap.to(cardDeck[index].body.quaternion, {
-    onUpdate: () => {
-      cardDeck[index].body.quaternion.setFromEuler(rotX, rotY, rotZ + orientZ)
-    },
+  gsap.to(cardDeck[index].model.quaternion, {
+    x: rotX,
+    y: rotY,
+    z: rotZ + orientZ,
     duration: duration * 3,
     delay: cardsToDeal * duration + duration * 3,
   })
@@ -212,14 +212,14 @@ function makeTurn({
   index: number
 }) {
   const randomZ = Math.random()
-  gsap.to(cardDeck[index].body.position, {
+  gsap.to(cardDeck[index].model.position, {
     x: 0,
     y: 0.28,
     z: -0.28,
     duration: duration * 2,
     delay: cardsToDeal * duration + duration * 6,
   })
-  gsap.to(cardDeck[index].body.position, {
+  gsap.to(cardDeck[index].model.position, {
     x: 0,
     y: tableHeight + gameCardParams.depth * 2 * 1.1,
     z: 0,
@@ -227,10 +227,10 @@ function makeTurn({
     delay: cardsToDeal * duration + duration * 8,
   })
 
-  gsap.to(cardDeck[index].body.quaternion, {
-    onUpdate: () => {
-      cardDeck[index].body.quaternion.setFromEuler(-Math.PI / 2, 0, randomZ)
-    },
+  gsap.to(cardDeck[index].model.quaternion, {
+    x: -Math.PI / 2,
+    y: 0,
+    z: randomZ,
     duration: duration * 2,
     delay: cardsToDeal * duration + duration * 8,
   })

@@ -8,69 +8,144 @@ import Scene from "../components/Scene.astro"
   <main>
     <Scene />
     <section class="welcome-screen">
-      <h1 class="welcome-header">Welcome to Playground!</h1>
+      <h1 class="welcome-header">
+        Welcome to <span class="logo">Playground!</span>
+      </h1>
       <p class="welcome-text">
-        We have a variety of games for the whole family.
+        Here you can explore a diverse range* of games suitable for the entire
+        family and watch live demos
       </p>
     </section>
-    <section class="cards">
-      <ul class="card-container">
-        <Card href="#jigsaw" title="Jigsaw Puzzles" body="" />
-        <Card href="#board" title="Board games" body="" />
-        <Card href="#card" title="Card games" body="" />
-      </ul>
+    <section class="game-links">
+      <!-- <ul class="card-container"> -->
+      <a class="jigsaw game-link" href="#jigsaw"> Jigsaw puzzle</a>
+      <a class="board game-link" href="#board"> Board game</a>
+      <a class="cards game-link" href="#cards"> Card game</a>
+      <!-- <Card href="#jigsaw" title="Jigsaw Puzzle" />
+      <Card href="#board" title="Board game" />
+      <Card href="#card" title="Card game" /> -->
+      <!-- </ul> -->
     </section>
-    <section><h2>Take your time to assemble a nice picture</h2></section>
-    <section><h2></h2></section>
-    <section><h2>Have some fun with our board games</h2></section>
-    <section><h2></h2></section>
-    <section><h2>Try your friendship with card games</h2></section>
-    <section><h2></h2></section>
+    <section class="game-text jigsaw-text">
+      <h2>Piece together a beautiful picture</h2>
+    </section>
+    <section id="jigsaw"></section>
+    <section class="game-text board-text">
+      <h2>Enjoy a delightful time playing our board game</h2>
+    </section>
+    <section id="board"></section>
+    <section class="game-text cards-text">
+      <h2>Make your party fun with card game</h2>
+    </section>
+    <section id="cards"></section>
   </main>
 </Layout>
 
+<script>
+  import { mainScrollAnimations } from "../components/logic/mainScrollAnimations"
+  mainScrollAnimations()
+</script>
+
 <style>
+  h1 {
+    font-size: clamp(3rem, 5vw, 4rem);
+    max-width: 20ch;
+  }
+
+  h2 {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    max-width: 20ch;
+  }
+  p {
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    max-width: 60ch;
+  }
+
+  h1,
+  h2,
+  p {
+    z-index: 1;
+  }
   main {
     position: relative;
     display: grid;
     justify-items: center;
-    grid-column-start: 2;
-    grid-column-end: 12;
+    /* grid-column-start: 2;
+    grid-column-end: 12; */
     text-align: center;
     /* background-color: rgba(160, 157, 157, 0.733); */
     /* height: 400lvh; */
+    background-color: #fff0f0;
   }
-
   section {
     height: 100lvh;
     height: 100vh;
+    width: 100%;
   }
-
   .welcome-screen {
     display: grid;
     place-content: center;
-    gap: 10vh;
-  }
-  .welcome-header {
-    font-size: 3rem;
-  }
-  .welcome-text {
-    font-size: 2rem;
-    max-width: 65ch;
+    gap: 15vh;
+    grid-row: 1;
+    grid-column: 1/-1;
+    /* background-color: #fff0f0; */
   }
 
-  .cards {
-    display: grid;
-    place-content: center;
+  .welcome-header {
+    color: #7a3a01;
   }
-  .card-container {
+
+  .logo {
+    color: #fa1924;
+  }
+
+  .welcome-text {
+    color: #884d1a;
+  }
+
+  .game-links {
+    display: grid;
+    grid-template-columns: repeat(2 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    place-content: center;
+    align-items: center;
+
+    font-weight: 700;
+
+    /* background-color: #fee8ff; */
+  }
+
+  .game-link {
+    text-decoration: none;
+    line-height: 1.4;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    text-align: center;
+    padding: 1rem;
+    color: #7a3a01;
+    z-index: 1;
+  }
+
+  .jigsaw {
+    grid-column: 1/2;
+    grid-row: 1/2;
+  }
+  .board {
+    grid-column: 2/3;
+    grid-row: 2/3;
+  }
+  .cards {
+    grid-column: 1/2;
+    grid-row: 3/4;
+  }
+
+  .game-text {
     display: grid;
     place-content: center;
     gap: 2rem;
   }
   @media (min-width: 1024px) {
-    .card-container {
+    /* .card-container {
       grid-template-columns: repeat(3, 1fr);
-    }
+    } */
   }
 </style>

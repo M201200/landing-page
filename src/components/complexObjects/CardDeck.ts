@@ -1,11 +1,13 @@
-import { gameCard, gameCardParams } from "../3dObjects/GameCard"
-import type { GameCard, PhysicalObject } from "../../types/3dObjects"
+import {
+  gameCard,
+  gameCardParams,
+  redCard,
+  yellowCard,
+  greenCard,
+  blueCard,
+} from "../3dObjects/GameCard"
+import type { GameCard } from "../../types/3dObjects"
 import { tableHeight } from "../3dObjects/Table"
-
-export const redCard = "E61010"
-export const yellowCard = "FBB500"
-export const greenCard = "23AC01"
-export const blueCard = "152AEB"
 
 export function cardDeck() {
   const deck: GameCard[] = []

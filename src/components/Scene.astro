@@ -1,11 +1,11 @@
-<!-- <div class="container"> -->
 <canvas></canvas>
-<!-- </div> -->
 
 <script>
   import {
     renderEnvironment,
+    scene,
     updateSceneSize,
+    physicalObjectsStatic,
   } from "./logic/renderEnvironment.ts"
 
   import { dice } from "./3dObjects/Dice.ts"
@@ -17,8 +17,16 @@
   import { jigsawAssemble } from "./logic/jigsawAssemble.ts"
   import { boardGame } from "./logic/boardGame.ts"
   import { boardGameBundle } from "./complexObjects/BoardGameBundle"
-  import type { PhysicalObject } from "../types/3dObjects"
   import { cardGame } from "./logic/cardGame"
+  import {
+    gameCard,
+    yellowCard,
+    blueCard,
+    greenCard,
+  } from "./3dObjects/GameCard"
+  import Card from "./Card.astro"
+  import { cameraPositionScroll } from "./logic/cameraPositionScroll"
+  import { welcomeScreenAnimation } from "./logic/welcomeScreenAnimation"
 
   window.addEventListener("resize", updateSceneSize)
 
@@ -30,12 +38,14 @@
   // const CardDeck = cardDeck()
   // const BoardGameBundle = boardGameBundle()
 
-  renderEnvironment({
-    staticObjects: [Table],
-    // objects: [gamePiece],
-    objectArrays: [Jigsaw],
-  })
+  // physicalObjectsStatic.push(Table)
+  // Jigsaw.forEach((piece) => scene.add(piece.model))
 
+  renderEnvironment()
+
+  cameraPositionScroll()
+
+  welcomeScreenAnimation()
   // cardGame(CardDeck)
   // boardGame(BoardGameBundle)
   // jigsawAssemble(Jigsaw)
@@ -43,10 +53,12 @@
 
 <style>
   canvas {
-    position: absolute;
+    position: sticky;
     top: 0;
     left: 0;
     width: 100%;
+    grid-row: 1;
+    grid-column: 1/-1;
     /* height: 400vh; */
     /* flex: 1;
     display: flex;

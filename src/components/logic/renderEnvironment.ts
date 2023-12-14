@@ -13,18 +13,13 @@ import { World, Body, Plane, Vec3 } from "cannon-es"
 // import { OrbitControls } from "three/addons/controls/OrbitControls.js"
 // import CannonDebugger from "cannon-es-debugger"
 
-import type {
-  GameCard,
-  JigsawPiece,
-  PhysicalObject,
-} from "../../types/3dObjects"
+import type { PhysicalObject } from "../../types/3dObjects"
+
+const canvas = document.querySelector("canvas")!
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const canvas = document.querySelector("canvas")!
-const main = document.querySelector("main")!
-console.log(main.clientWidth / main.clientHeight)
 export const renderer = new WebGLRenderer({
   alpha: true,
   antialias: true,
@@ -34,10 +29,12 @@ export const renderer = new WebGLRenderer({
 export const scene = new Scene()
 export const camera = new PerspectiveCamera(
   45,
-  main.clientWidth / main.clientHeight,
+  window.innerWidth / window.innerHeight,
   5,
-  600
+  300
 )
+camera.position.set(0, 4, 0)
+camera.lookAt(0, 0, 0)
 export const world = new World({
   allowSleep: true,
   gravity: new Vec3(0, -50, 0),
@@ -49,36 +46,25 @@ world.defaultContactMaterial.contactEquationRelaxation = 4
 // @ts-ignore
 // export const cannonDebugger = new CannonDebugger(scene, world)
 // export const controls = new OrbitControls(camera, renderer.domElement)
-
-const objectsToAnimate: PhysicalObject[] = []
-const objectArraysToAnimate: PhysicalObject[][] = []
+export const physicalObjectsStatic: PhysicalObject[] = []
+export const physicalObjectsToAnimate: PhysicalObject[] = []
+export const physicalObjectArraysToAnimate: PhysicalObject[][] = []
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function renderEnvironment({
-  objects,
-  objectArrays,
-  staticObjects,
-}: {
-  objects?: PhysicalObject[]
-  objectArrays?: (PhysicalObject[] | JigsawPiece[] | GameCard[])[]
-  staticObjects?: PhysicalObject[]
-} = {}) {
+export function renderEnvironment() {
   renderer.shadowMap.enabled = true
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-
-  camera.position.set(0, 5.15, 3).multiplyScalar(26)
-  camera.lookAt(0, 2, 2)
 
   updateSceneSize()
   // controls.update()
 
-  const ambientLight = new AmbientLight(0xffffff, 0.5)
+  const ambientLight = new AmbientLight(0xffffff, 1)
   scene.add(ambientLight)
 
   const topLight = new PointLight(0xffffff, 1000)
-  topLight.position.set(10, 15, 3)
+  topLight.position.set(2, 15, 5)
   topLight.castShadow = true
   topLight.shadow.mapSize.width = 4096
   topLight.shadow.mapSize.height = 4096
@@ -111,24 +97,22 @@ export function renderEnvironment({
   )
   world.addBody(floorBody)
 
-  if (staticObjects?.length) {
-    staticObjects.forEach((object) => {
+  if (physicalObjectsStatic?.length) {
+    physicalObjectsStatic.forEach((object) => {
       scene.add(object.model)
       world.addBody(object.body)
     })
   }
 
-  if (objects?.length) {
-    objects.forEach((object) => {
-      objectsToAnimate.push(object)
+  if (physicalObjectsToAnimate?.length) {
+    physicalObjectsToAnimate.forEach((object) => {
       scene.add(object.model)
       world.addBody(object.body)
     })
   }
 
-  if (objectArrays?.length) {
-    objectArrays.forEach((array) => {
-      objectArraysToAnimate.push(array)
+  if (physicalObjectArraysToAnimate?.length) {
+    physicalObjectArraysToAnimate.forEach((array) => {
       array.forEach((object) => {
         scene.add(object.model)
         world.addBody(object.body)
@@ -143,9 +127,9 @@ export function renderEnvironment({
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export function updateSceneSize() {
-  camera.aspect = main.clientWidth / main.clientHeight
+  camera.aspect = window.innerWidth / window.innerHeight
   camera.updateProjectionMatrix()
-  renderer.setSize(main.clientWidth, main.clientHeight)
+  renderer.setSize(window.innerWidth, window.innerHeight)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -154,8 +138,8 @@ export function updateSceneSize() {
 function animate() {
   world.fixedStep()
 
-  if (objectsToAnimate.length) {
-    objectsToAnimate.forEach((object) => {
+  if (physicalObjectsToAnimate?.length) {
+    physicalObjectsToAnimate.forEach((object) => {
       object.model.position.set(
         object.body.position.x,
         object.body.position.y,
@@ -170,8 +154,8 @@ function animate() {
     })
   }
 
-  if (objectArraysToAnimate.length) {
-    objectArraysToAnimate.forEach((array) =>
+  if (physicalObjectArraysToAnimate?.length) {
+    physicalObjectArraysToAnimate.forEach((array) =>
       array.forEach((object) => {
         object.model.position.set(
           object.body.position.x,

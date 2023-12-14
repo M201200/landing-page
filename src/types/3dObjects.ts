@@ -6,12 +6,14 @@ export type PhysicalObject = {
   model: Group | Mesh
   body: Body
 }
-export type JigsawPiece = PhysicalObject & {
+export type JigsawPiece = {
+  model: Group | Mesh
   column: number
   row: number
 }
 
-export type GameCard = PhysicalObject & {
+export type GameCard = {
+  model: Group | Mesh
   faceColor: string
   number: number
 }

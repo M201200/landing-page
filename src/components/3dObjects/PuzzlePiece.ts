@@ -1,4 +1,3 @@
-import { Body, Box, Cylinder, Material, Quaternion, Vec3 } from "cannon-es"
 import {
   Group,
   MeshStandardMaterial,
@@ -42,10 +41,10 @@ export function puzzlePiece({
   posX = 0,
   posY = 0,
   posZ = 0,
-  rotX = -1.5708,
+  rotX = -Math.PI / 2,
   rotY = 0,
   rotZ = 0,
-}: PuzzlePiece): JigsawPiece {
+}: PuzzlePiece = {}): JigsawPiece {
   const upperRecess: Path =
     corner || side || oppositeSide
       ? [0, 0, 0, 0, 0, 0]
@@ -162,87 +161,5 @@ export function puzzlePiece({
 
   model.receiveShadow = true
 
-  const body = new Body({
-    mass: 0.2,
-    allowSleep: true,
-    sleepTimeLimit: 0.4,
-    material: new Material({ restitution: 0, friction: 1 }),
-  })
-
-  function addBox({
-    sizeX,
-    sizeY,
-    posX,
-    posY,
-  }: {
-    sizeX: number
-    sizeY: number
-    posX: number
-    posY: number
-  }) {
-    return body.addShape(
-      new Box(
-        new Vec3(
-          (pieceSize * scale) / sizeX,
-          (pieceSize * scale) / sizeY,
-          pieceDepth * scale * 25
-        )
-      ),
-      new Vec3(posX * pieceSize * scale, posY * pieceSize * scale, 0)
-    )
-  }
-
-  function addCylinder({ posX, posY }: { posX: number; posY: number }) {
-    return body.addShape(
-      new Cylinder(
-        0.2 * pieceSize * scale,
-        0.2 * pieceSize * scale,
-        pieceDepth * scale * 50,
-        20
-      ),
-      new Vec3(posX * pieceSize * scale, posY * pieceSize * scale, 0),
-      new Quaternion(0.7071, 0, 0, 0.7071)
-    )
-  }
-
-  addCylinder({ posX: 0.554, posY: 0 })
-
-  if (!corner && !side && !oppositeSide) {
-    addBox({ sizeX: 2.7, sizeY: 2.7, posX: 0.13, posY: -0.13 })
-    addBox({ sizeX: 7, sizeY: 7, posX: -0.36, posY: 0.36 })
-    addBox({ sizeX: 7, sizeY: 7, posX: -0.36, posY: -0.36 })
-    addBox({ sizeX: 7, sizeY: 7, posX: 0.36, posY: 0.36 })
-    addCylinder({ posX: 0, posY: -0.554 })
-  }
-
-  if (side) {
-    addBox({ sizeX: 2.7, sizeY: 2, posX: 0.13, posY: 0 })
-    addBox({ sizeX: 7, sizeY: 7, posX: -0.36, posY: -0.36 })
-    addBox({ sizeX: 7, sizeY: 7, posX: -0.36, posY: 0.36 })
-    addCylinder({ posX: 0, posY: -0.554 })
-  }
-  if (oppositeSide) {
-    addBox({ sizeX: 2.7, sizeY: 2.7, posX: 0.13, posY: 0.13 })
-    addBox({ sizeX: 7, sizeY: 7, posX: -0.36, posY: -0.36 })
-    addBox({ sizeX: 7, sizeY: 7, posX: -0.36, posY: 0.36 })
-    addBox({ sizeX: 7, sizeY: 7, posX: 0.36, posY: -0.36 })
-  }
-
-  if (corner) {
-    addBox({ sizeX: 2, sizeY: 2.7, posX: 0, posY: 0.13 })
-    addBox({ sizeX: 7, sizeY: 7, posX: 0.36, posY: -0.36 })
-    addBox({ sizeX: 7, sizeY: 7, posX: -0.36, posY: -0.36 })
-  }
-
-  body.position.set(model.position.x, model.position.y, model.position.z)
-  body.quaternion.set(
-    model.quaternion.x,
-    model.quaternion.y,
-    model.quaternion.z,
-    model.quaternion.w
-  )
-
-  body.sleep()
-
-  return { model, body, column, row }
+  return { model, column, row }
 }

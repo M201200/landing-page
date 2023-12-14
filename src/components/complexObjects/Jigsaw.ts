@@ -177,7 +177,7 @@ export function jigsaw(): JigsawPiece[] {
     )
     const cellPosition = idx % 5
 
-    piece.body.position.set(
+    piece.model.position.set(
       -2 + columnPosition,
       cellPosition * pieceDepth * 50,
       2.5 + rowPosition

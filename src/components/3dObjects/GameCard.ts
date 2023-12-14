@@ -9,7 +9,6 @@ import {
   Vector3,
   Group,
 } from "three"
-import { Body, Box, Material, Quaternion, Vec3 } from "cannon-es"
 import type { GameCard } from "../../types/3dObjects"
 
 import { cardBackgroundTemplate } from "../templates/CardBackgroundTemplate.ts"
@@ -35,15 +34,20 @@ export const gameCardParams = {
 
 const textureLoader = new TextureLoader()
 
+export const redCard = "E61010"
+export const yellowCard = "FBB500"
+export const greenCard = "23AC01"
+export const blueCard = "152AEB"
+
 export function gameCard({
   faceColor,
   number,
   posX = 0,
   posY = 1,
   posZ = 0,
-  rotX = 1.5708,
+  rotX = Math.PI / 2,
   rotY = 0,
-  rotZ = 1.5708 * 2,
+  rotZ = Math.PI,
 }: GameCardProps): GameCard {
   const model = new Group()
 
@@ -180,27 +184,5 @@ export function gameCard({
 
   model.rotation.set(rotation.x, rotation.y, rotation.z)
 
-  const body = new Body({
-    mass: 0.08,
-    material: new Material({ restitution: 0, friction: 0.8 }),
-    shape: new Box(
-      new Vec3(
-        gameCardParams.width / 2,
-        gameCardParams.height / 2,
-        gameCardParams.depth / 2 + textHeight * 2
-      )
-    ),
-    position: new Vec3(model.position.x, model.position.y, model.position.z),
-    quaternion: new Quaternion(
-      model.quaternion.x,
-      model.quaternion.y,
-      model.quaternion.z,
-      model.quaternion.w
-    ),
-    sleepTimeLimit: 0.4,
-  })
-  body.allowSleep = true
-  body.sleep()
-
-  return { model, body, faceColor, number }
+  return { model, faceColor, number }
 }

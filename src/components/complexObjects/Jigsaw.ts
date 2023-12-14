@@ -5,7 +5,7 @@ import type { JigsawPiece } from "../../types/3dObjects"
 import { pieceDepth, puzzlePiece } from "../3dObjects/PuzzlePiece"
 
 const textureLoader = new TextureLoader()
-const texture = textureLoader.load("/public/images/nature.jpg")
+const texture = textureLoader.load("/images/nature.jpg")
 texture.colorSpace = SRGBColorSpace
 texture.wrapS = texture.wrapT = RepeatWrapping
 

@@ -40,7 +40,7 @@ export function welcomeScreenAnimation() {
   })
 
   const textureLoader = new TextureLoader()
-  const texture = textureLoader.load("/public/images/nature.jpg")
+  const texture = textureLoader.load("/images/nature.jpg")
   texture.colorSpace = SRGBColorSpace
   texture.wrapS = texture.wrapT = RepeatWrapping
   texture.repeat.set(1 / 5, 1 / 5)

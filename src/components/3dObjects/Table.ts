@@ -13,7 +13,7 @@ import type { PhysicalObject } from "../../types/3dObjects"
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js"
 
 const params = {
-  scale: 3,
+  scale: 2,
   tableTopRadius: 1.2,
   tableTopHeight: 0.04,
   tableTopSegments: 32,
@@ -28,11 +28,11 @@ export const tableHeight =
   (params.tableLegHeight + params.tableTopHeight) * params.scale +
   params.tableTopHeight * params.scale
 
-export function table(): PhysicalObject {
+export function table({ posX = 0, posY = -7, posZ = 0 } = {}): PhysicalObject {
   const position = new Vector3(
-    0,
-    -7 + (params.tableLegHeight + params.tableTopHeight) * params.scale,
-    0
+    posX,
+    posY + (params.tableLegHeight + params.tableTopHeight) * params.scale,
+    posZ
   )
   const rotationY = 0.785398
 

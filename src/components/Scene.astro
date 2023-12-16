@@ -6,49 +6,45 @@
     scene,
     updateSceneSize,
     physicalObjectsStatic,
+    physicalObjectArraysToAnimate,
   } from "./logic/renderEnvironment.ts"
 
-  import { dice } from "./3dObjects/Dice.ts"
-  import { board } from "./3dObjects/Board.ts"
   import { table } from "./3dObjects/Table.ts"
-  import { boardGamePiece } from "./3dObjects/BoardGamePiece"
   import { jigsaw } from "./complexObjects/Jigsaw.ts"
-  import { cardDeck } from "./complexObjects/CardDeck"
+  import { boardGameBundle } from "./complexObjects/BoardGameBundle.ts"
+  import { cardDeck } from "./complexObjects/CardDeck.ts"
   import { jigsawAssemble } from "./logic/jigsawAssemble.ts"
   import { boardGame } from "./logic/boardGame.ts"
-  import { boardGameBundle } from "./complexObjects/BoardGameBundle"
-  import { cardGame } from "./logic/cardGame"
-  import {
-    gameCard,
-    yellowCard,
-    blueCard,
-    greenCard,
-  } from "./3dObjects/GameCard"
-  import Card from "./Card.astro"
-  import { cameraPositionScroll } from "./logic/cameraPositionScroll"
-  import { welcomeScreenAnimation } from "./logic/welcomeScreenAnimation"
+  import { cardGame } from "./logic/cardGame.ts"
+
+  import { cameraPositionScroll } from "./logic/cameraPositionScroll.ts"
+  import { welcomeScreenAnimation } from "./logic/welcomeScreenAnimation.ts"
 
   window.addEventListener("resize", updateSceneSize)
 
-  const Table = table()
-  // const Dice = dice()
-  const Jigsaw = jigsaw()
-  // const Board = board()
-  // const gamePiece = boardGamePiece()
-  // const CardDeck = cardDeck()
-  // const BoardGameBundle = boardGameBundle()
+  const TableJigsaw = table({ posZ: 20 })
+  const TableBoard = table({ posZ: 50 })
+  const TableCards = table({ posZ: 80 })
+  const Jigsaw = jigsaw({ posY: -2, posZ: 18 })
+  const CardDeck = cardDeck({ posY: -2, posZ: 80 })
+  const BoardGameBundle = boardGameBundle({
+    posY: 0,
+    posZ: 50,
+  })
 
-  // physicalObjectsStatic.push(Table)
-  // Jigsaw.forEach((piece) => scene.add(piece.model))
+  physicalObjectsStatic.push(TableJigsaw, TableBoard, TableCards)
+  physicalObjectArraysToAnimate.push(BoardGameBundle)
+  Jigsaw.forEach((piece) => scene.add(piece.model))
+  CardDeck.forEach((piece) => scene.add(piece.model))
 
   renderEnvironment()
 
   cameraPositionScroll()
 
   welcomeScreenAnimation()
-  // cardGame(CardDeck)
-  // boardGame(BoardGameBundle)
-  // jigsawAssemble(Jigsaw)
+  jigsawAssemble(Jigsaw, { posZ: 20 })
+  boardGame(BoardGameBundle)
+  cardGame(CardDeck, { posY: -2, posZ: 80 })
 </script>
 
 <style>
@@ -59,12 +55,14 @@
     width: 100%;
     grid-row: 1;
     grid-column: 1/-1;
-    /* height: 400vh; */
-    /* flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: sans-serif; */
-    /* z-index: -1; */
+
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out 1s forwards;
+  }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
   }
 </style>

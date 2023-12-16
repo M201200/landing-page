@@ -4,7 +4,6 @@ import {
   MeshStandardMaterial,
   SRGBColorSpace,
   TextureLoader,
-  Vector3,
 } from "three"
 
 import { Body, Box, Material, Quaternion, Vec3 } from "cannon-es"
@@ -12,13 +11,13 @@ import { Body, Box, Material, Quaternion, Vec3 } from "cannon-es"
 import type { PhysicalObject } from "../../types/3dObjects"
 
 export const boardParams = {
-  size: 7,
+  size: 3,
   depth: 0.05,
   segmentsFront: 1,
   segmentsEdge: 1,
 }
 
-export function board(): PhysicalObject {
+export function board({ posX = 0, posY = 1, posZ = 0 } = {}): PhysicalObject {
   const textureLoader = new TextureLoader()
 
   const BoxGeo = new BoxGeometry(
@@ -45,17 +44,14 @@ export function board(): PhysicalObject {
     new MeshStandardMaterial({ color: 0xeeeeee }),
   ]
 
-  const position = new Vector3(0, 1, 0)
-  const rotation = new Vector3(-Math.PI / 2, 0, 0)
-
   const model = new Mesh(BoxGeo, boardMaterial)
 
   model.castShadow = true
   model.receiveShadow = true
 
-  model.position.copy(position)
+  model.position.set(posX, posY, posZ)
 
-  model.rotation.set(rotation.x, rotation.y, rotation.z)
+  model.rotation.set(-Math.PI / 2, 0, 0)
 
   const body = new Body({
     mass: 5,

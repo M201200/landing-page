@@ -12,7 +12,7 @@ texture.wrapS = texture.wrapT = RepeatWrapping
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const pieceScale = 0.8
+export const pieceScale = 0.3
 export const jigsawColumns = 5
 export const jigsawRows = 5
 
@@ -22,7 +22,7 @@ const textureOffsetY = 1 / jigsawRows
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function jigsaw(): JigsawPiece[] {
+export function jigsaw({ posX = 0, posY = 0, posZ = 0 } = {}): JigsawPiece[] {
   let jigsaw: JigsawPiece[] = []
 
   const topLeftCornerTexture = texture.clone()
@@ -178,9 +178,9 @@ export function jigsaw(): JigsawPiece[] {
     const cellPosition = idx % 5
 
     piece.model.position.set(
-      -2 + columnPosition,
-      cellPosition * pieceDepth * 50,
-      2.5 + rowPosition
+      -2 + columnPosition + posX,
+      cellPosition * pieceDepth * 50 + posY,
+      2.5 + rowPosition + posZ
     )
   })
 

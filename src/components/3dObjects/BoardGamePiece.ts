@@ -9,10 +9,16 @@ import {
 
 import type { PhysicalObject } from "../../types/3dObjects"
 
-export function boardGamePiece(
+export function boardGamePiece({
   color = "eeeeee",
-  paramsScale = 0.1
-): PhysicalObject {
+  paramsScale = 0.1,
+  posX = 0,
+  posY = 1,
+  posZ = 0,
+  rotX = 0,
+  rotY = 0,
+  rotZ = 0,
+} = {}): PhysicalObject {
   const params = {
     basisTop: 0.8 * paramsScale,
     basisBottom: 1 * paramsScale,
@@ -71,7 +77,8 @@ export function boardGamePiece(
 
   const model = new Group()
   model.add(pieceBasisMesh, pieceBodyMesh, pieceApexMesh)
-  model.position.set(0, 3, -3)
+  model.position.set(posX, posY, posZ)
+  model.rotation.set(rotX, rotY, rotZ)
 
   const body = new Body({
     mass: 0.2,

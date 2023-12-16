@@ -20,23 +20,34 @@ const params = {
   edgeRadius: 0.12,
   notchRadius: 0.15,
   notchDepth: 0.09,
-  scale: 0.4,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function dice(): PhysicalObject {
+export function dice({
+  posX = 0,
+  posY = 1,
+  posZ = 0,
+  scale = 0.4,
+} = {}): PhysicalObject {
   const model = createDiceModel().clone()
-  model.scale.set(params.scale, params.scale, params.scale)
+  model.position.set(posX, posY, posZ)
+  model.scale.set(scale, scale, scale)
 
   const body = new Body({
     mass: 0.3,
-    shape: new Box(
-      new Vec3(0.5 * params.scale, 0.5 * params.scale, 0.5 * params.scale)
-    ),
+    shape: new Box(new Vec3(0.5 * scale, 0.5 * scale, 0.5 * scale)),
     sleepTimeLimit: 0.02,
   })
+
+  body.position.set(model.position.x, model.position.y, model.position.z)
+  body.quaternion.set(
+    model.quaternion.x,
+    model.quaternion.y,
+    model.quaternion.z,
+    model.quaternion.w
+  )
 
   return { model, body }
 }

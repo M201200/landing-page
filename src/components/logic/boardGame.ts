@@ -1,6 +1,5 @@
 import gsap from "gsap"
 import type { PhysicalObject } from "../../types/3dObjects"
-import { RedPieceInitialPosition } from "../complexObjects/BoardGameBundle"
 import { Vec3 } from "cannon-es"
 
 let RedPiece: PhysicalObject
@@ -59,120 +58,98 @@ function MakeTurn(score: number) {
   switch (score) {
     case 1:
       {
-        gsap
-          .to(RedPiece.body.position, {
-            x: RedPieceInitialPosition.x,
-            y: RedPieceInitialPosition.y + 0.4,
-            z: RedPieceInitialPosition.z,
-          })
-          .duration(0.1)
-        gsap
-          .to(RedPiece.body.position, {
-            x: RedPieceInitialPosition.x - 0.05,
-            y: RedPieceInitialPosition.y,
-            z: RedPieceInitialPosition.z - 0.28,
-          })
-          .delay(0.1)
-          .duration(0.4)
+        animateTurn({
+          piece: RedPiece,
+          offsetX: -0.05,
+          offsetY: 0.4,
+          offsetZ: -0.28,
+          duration: 0.4,
+        })
       }
       break
     case 2:
       {
-        gsap
-          .to(RedPiece.body.position, {
-            x: RedPieceInitialPosition.x,
-            y: RedPieceInitialPosition.y + 0.4,
-            z: RedPieceInitialPosition.z,
-          })
-          .duration(0.2)
-        gsap
-          .to(RedPiece.body.position, {
-            x: RedPieceInitialPosition.x - 0.1,
-            y: RedPieceInitialPosition.y,
-            z: RedPieceInitialPosition.z - 0.6,
-          })
-          .delay(0.2)
-          .duration(0.6)
+        animateTurn({
+          piece: RedPiece,
+          offsetX: -0.1,
+          offsetY: 0.4,
+          offsetZ: -0.6,
+          duration: 0.6,
+        })
       }
       break
     case 3:
       {
-        gsap
-          .to(RedPiece.body.position, {
-            x: RedPieceInitialPosition.x,
-            y: RedPieceInitialPosition.y + 0.4,
-            z: RedPieceInitialPosition.z,
-          })
-          .duration(0.2)
-        gsap
-          .to(RedPiece.body.position, {
-            x: RedPieceInitialPosition.x - 0.1,
-            y: RedPieceInitialPosition.y,
-            z: RedPieceInitialPosition.z - 1,
-          })
-          .delay(0.2)
-          .duration(1)
+        animateTurn({
+          piece: RedPiece,
+          offsetX: -0.1,
+          offsetY: 0.4,
+          offsetZ: -1,
+        })
       }
       break
     case 4:
       {
-        gsap
-          .to(RedPiece.body.position, {
-            x: RedPieceInitialPosition.x,
-            y: RedPieceInitialPosition.y + 0.4,
-            z: RedPieceInitialPosition.z,
-          })
-          .duration(0.2)
-        gsap
-          .to(RedPiece.body.position, {
-            x: RedPieceInitialPosition.x - 0.1,
-            y: RedPieceInitialPosition.y,
-            z: RedPieceInitialPosition.z - 1.4,
-          })
-          .delay(0.2)
-          .duration(1)
+        animateTurn({
+          piece: RedPiece,
+          offsetX: -0.1,
+          offsetY: 0.4,
+          offsetZ: -1.4,
+        })
       }
       break
     case 5:
       {
-        gsap
-          .to(RedPiece.body.position, {
-            x: RedPieceInitialPosition.x,
-            y: RedPieceInitialPosition.y + 0.4,
-            z: RedPieceInitialPosition.z,
-          })
-          .duration(0.2)
-        gsap
-          .to(RedPiece.body.position, {
-            x: RedPieceInitialPosition.x,
-            y: RedPieceInitialPosition.y,
-            z: RedPieceInitialPosition.z - 1.6,
-          })
-          .delay(0.2)
-          .duration(1)
+        animateTurn({
+          piece: RedPiece,
+          offsetX: 0,
+          offsetY: 0.4,
+          offsetZ: -1.6,
+        })
       }
       break
     case 6:
       {
-        gsap
-          .to(RedPiece.body.position, {
-            x: RedPieceInitialPosition.x,
-            y: RedPieceInitialPosition.y + 0.4,
-            z: RedPieceInitialPosition.z,
-          })
-          .duration(0.2)
-        gsap
-          .to(RedPiece.body.position, {
-            x: RedPieceInitialPosition.x + 0.1,
-            y: RedPieceInitialPosition.y,
-            z: RedPieceInitialPosition.z - 2.2,
-          })
-          .delay(0.2)
-          .duration(1)
+        animateTurn({
+          piece: RedPiece,
+          offsetX: +0.1,
+          offsetY: 0.4,
+          offsetZ: -2.2,
+        })
       }
       break
   }
   RedPiece.body.mass = 0.2
+}
+
+type AnimateTurn = {
+  piece: PhysicalObject
+  offsetX: number
+  offsetY: number
+  offsetZ: number
+  duration?: number
+}
+
+function animateTurn({
+  piece,
+  offsetX,
+  offsetY,
+  offsetZ,
+  duration = 1,
+}: AnimateTurn) {
+  const timeline = gsap.timeline()
+  timeline.to(piece.body.position, {
+    x: piece.body.position.x,
+    y: piece.body.position.y + offsetY,
+    z: piece.body.position.z,
+    duration: duration / 4,
+  })
+  timeline.to(piece.body.position, {
+    x: piece.body.position.x + offsetX,
+    y: piece.body.position.y,
+    z: piece.body.position.z + offsetZ,
+    duration: duration,
+  })
 }
 
 function throwDice(dice: PhysicalObject) {
@@ -180,7 +157,14 @@ function throwDice(dice: PhysicalObject) {
   dice.body.angularVelocity.setZero()
 
   const force = 1 + Math.random()
-  dice.body.applyImpulse(new Vec3(-force, force, 0), new Vec3(0, 0, 0.2))
+  dice.body.applyImpulse(
+    new Vec3(-force, force, 0),
+    new Vec3(
+      dice.body.position.x,
+      dice.body.position.y,
+      dice.body.position.z + 0.2
+    )
+  )
 
   dice.body.allowSleep = true
 }

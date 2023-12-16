@@ -10,7 +10,7 @@ import {
   WebGLRenderer,
 } from "three"
 import { World, Body, Plane, Vec3 } from "cannon-es"
-// import { OrbitControls } from "three/addons/controls/OrbitControls.js"
+import { OrbitControls } from "three/addons/controls/OrbitControls.js"
 // import CannonDebugger from "cannon-es-debugger"
 
 import type { PhysicalObject } from "../../types/3dObjects"
@@ -35,6 +35,20 @@ export const camera = new PerspectiveCamera(
 )
 camera.position.set(0, 4, 0)
 camera.lookAt(0, 0, 0)
+
+export const ambientLight = new AmbientLight(0xffffff, 1)
+scene.add(ambientLight)
+
+export const topLight = new PointLight(0xffffff, 1000)
+topLight.position.set(-8, 15, 5)
+topLight.castShadow = true
+topLight.shadow.mapSize.width = 4096
+topLight.shadow.mapSize.height = 4096
+topLight.shadow.camera.near = 5
+topLight.shadow.camera.far = 400
+topLight.shadow.bias = -0.00003
+scene.add(topLight)
+
 export const world = new World({
   allowSleep: true,
   gravity: new Vec3(0, -50, 0),
@@ -59,19 +73,6 @@ export function renderEnvironment() {
 
   updateSceneSize()
   // controls.update()
-
-  const ambientLight = new AmbientLight(0xffffff, 1)
-  scene.add(ambientLight)
-
-  const topLight = new PointLight(0xffffff, 1000)
-  topLight.position.set(2, 15, 5)
-  topLight.castShadow = true
-  topLight.shadow.mapSize.width = 4096
-  topLight.shadow.mapSize.height = 4096
-  topLight.shadow.camera.near = 5
-  topLight.shadow.camera.far = 400
-  topLight.shadow.bias = -0.00003
-  scene.add(topLight)
 
   const floor = new Mesh(
     new PlaneGeometry(1000, 1000),

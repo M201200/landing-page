@@ -7,7 +7,6 @@ export function cameraPositionScroll() {
   gsap.registerPlugin(ScrollTrigger)
 
   const timeline = gsap.timeline()
-
   gsap.to(topLight.position, {
     scrollTrigger: {
       trigger: "main",
@@ -41,6 +40,7 @@ export function cameraPositionScroll() {
         scrub: true,
         markers: true,
       },
+      z: 10,
       onUpdate: function () {
         camera.position.z = this.progress() * (10 - 8) + 8
       },
@@ -54,6 +54,7 @@ export function cameraPositionScroll() {
         scrub: true,
         markers: true,
       },
+      z: 25,
       onUpdate: function () {
         camera.position.z = this.progress() * (25 - 10) + 10
       },
@@ -66,7 +67,7 @@ export function cameraPositionScroll() {
         scrub: true,
         markers: true,
       },
-      y: 6,
+      y: 4,
     })
     .to(camera.rotation, {
       scrollTrigger: {
@@ -89,6 +90,7 @@ export function cameraPositionScroll() {
         scrub: true,
         markers: true,
       },
+      z: 55,
       onUpdate: function () {
         camera.position.z = this.progress() * (55 - 25) + 25
       },
@@ -102,6 +104,7 @@ export function cameraPositionScroll() {
         scrub: true,
         markers: true,
       },
+      z: 85,
       onUpdate: function () {
         camera.position.z = this.progress() * (85 - 55) + 55
       },

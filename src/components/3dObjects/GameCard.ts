@@ -6,7 +6,6 @@ import {
   MeshStandardMaterial,
   SRGBColorSpace,
   TextureLoader,
-  Vector3,
   Group,
 } from "three"
 import type { GameCard } from "../../types/3dObjects"
@@ -22,12 +21,13 @@ type GameCardProps = {
   rotX?: number
   rotY?: number
   rotZ?: number
+  scale?: number
 }
 
 export const gameCardParams = {
   width: 0.5,
   height: 0.75,
-  depth: 0.008,
+  depth: 0.004,
   segments: 1,
   radius: 0.4,
 }
@@ -48,11 +48,10 @@ export function gameCard({
   rotX = Math.PI / 2,
   rotY = 0,
   rotZ = Math.PI,
+  scale = 1,
 }: GameCardProps): GameCard {
   const model = new Group()
 
-  const position = new Vector3(posX, posY, posZ)
-  const rotation = new Vector3(rotX, rotY, rotZ)
   const CardGeo = new RoundedBoxGeometry(
     gameCardParams.width,
     gameCardParams.height,
@@ -180,9 +179,9 @@ export function gameCard({
     )
   })
 
-  model.position.copy(position)
-
-  model.rotation.set(rotation.x, rotation.y, rotation.z)
+  model.position.set(posX, posY, posZ)
+  model.rotation.set(rotX, rotY, rotZ)
+  model.scale.set(scale, scale, scale)
 
   return { model, faceColor, number }
 }

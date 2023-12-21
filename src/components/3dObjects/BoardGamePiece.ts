@@ -11,7 +11,7 @@ import type { PhysicalObject } from "../../types/3dObjects"
 
 export function boardGamePiece({
   color = "eeeeee",
-  paramsScale = 0.1,
+  paramsScale = 0.05,
   posX = 0,
   posY = 1,
   posZ = 0,
@@ -118,6 +118,6 @@ export function boardGamePiece({
     model.quaternion.z,
     model.quaternion.w
   )
-
+  body.sleep()
   return { model, body }
 }

@@ -10,7 +10,7 @@ import {
   WebGLRenderer,
 } from "three"
 import { World, Body, Plane, Vec3 } from "cannon-es"
-import { OrbitControls } from "three/addons/controls/OrbitControls.js"
+// import { OrbitControls } from "three/addons/controls/OrbitControls.js"
 // import CannonDebugger from "cannon-es-debugger"
 
 import type { PhysicalObject } from "../../types/3dObjects"
@@ -30,7 +30,7 @@ export const scene = new Scene()
 export const camera = new PerspectiveCamera(
   45,
   window.innerWidth / window.innerHeight,
-  5,
+  1,
   300
 )
 camera.position.set(0, 4, 0)
@@ -57,7 +57,6 @@ world.defaultContactMaterial.restitution = 0.3
 world.defaultContactMaterial.contactEquationStiffness = 1e7
 world.defaultContactMaterial.contactEquationRelaxation = 4
 
-// @ts-ignore
 // export const cannonDebugger = new CannonDebugger(scene, world)
 // export const controls = new OrbitControls(camera, renderer.domElement)
 export const physicalObjectsStatic: PhysicalObject[] = []
@@ -121,7 +120,13 @@ export function renderEnvironment() {
     })
   }
 
-  animate()
+  animationParams({
+    scene: scene,
+    camera: camera,
+    world: world,
+    objects: physicalObjectsToAnimate,
+    objectArrays: physicalObjectArraysToAnimate,
+  })
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -136,28 +141,26 @@ export function updateSceneSize() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function animate() {
-  world.fixedStep()
+type AnimationParams = {
+  scene: Scene
+  camera: PerspectiveCamera
+  world: World
+  objects: PhysicalObject[]
+  objectArrays: PhysicalObject[][]
+}
 
-  if (physicalObjectsToAnimate?.length) {
-    physicalObjectsToAnimate.forEach((object) => {
-      object.model.position.set(
-        object.body.position.x,
-        object.body.position.y,
-        object.body.position.z
-      )
-      object.model.quaternion.set(
-        object.body.quaternion.x,
-        object.body.quaternion.y,
-        object.body.quaternion.z,
-        object.body.quaternion.w
-      )
-    })
-  }
+function animationParams({
+  scene,
+  camera,
+  world,
+  objects,
+  objectArrays,
+}: AnimationParams) {
+  function animate() {
+    world.fixedStep()
 
-  if (physicalObjectArraysToAnimate?.length) {
-    physicalObjectArraysToAnimate.forEach((array) =>
-      array.forEach((object) => {
+    if (objects?.length) {
+      objects.forEach((object) => {
         object.model.position.set(
           object.body.position.x,
           object.body.position.y,
@@ -170,11 +173,31 @@ function animate() {
           object.body.quaternion.w
         )
       })
-    )
+    }
+
+    if (objectArrays?.length) {
+      objectArrays.forEach((array) =>
+        array.forEach((object) => {
+          object.model.position.set(
+            object.body.position.x,
+            object.body.position.y,
+            object.body.position.z
+          )
+          object.model.quaternion.set(
+            object.body.quaternion.x,
+            object.body.quaternion.y,
+            object.body.quaternion.z,
+            object.body.quaternion.w
+          )
+        })
+      )
+    }
+
+    // cannonDebugger.update()
+    // controls.update()
+    renderer.render(scene, camera)
+    requestAnimationFrame(animate)
   }
 
-  // cannonDebugger.update()
-  // controls.update()
-  renderer.render(scene, camera)
-  requestAnimationFrame(animate)
+  animate()
 }

@@ -1,7 +1,7 @@
 import gsap from "gsap"
 import type { GameCard } from "../../types/3dObjects"
 import { gameCardParams } from "../3dObjects/GameCard"
-import { tableHeight } from "../3dObjects/Table"
+import { cardTableRadius, cardTableHeight } from "../3dObjects/CardTable"
 
 const duration = 0.2
 const cardsToDeal = 28
@@ -12,14 +12,16 @@ let fourthDeck = 0
 
 export function cardGame(
   cardDeck: GameCard[],
-  { posX = 0, posY = 1, posZ = 0 } = {}
+  { posX = 0, posZ = 0, scale = 1 } = {}
 ) {
+  const offset = 3.5 * 0.08
+  const radius = cardTableRadius * 0.68
   shuffleArray(cardDeck)
   cardDeck.forEach((card, idx) => {
     card.model.position.y =
-      tableHeight +
-      gameCardParams.depth * 1.1 * 40 -
-      gameCardParams.depth * 1.1 * (idx + 1)
+      cardTableHeight +
+      gameCardParams.depth * scale * 20 -
+      gameCardParams.depth * scale * (idx + 1)
   })
   for (let i = 0; i <= cardsToDeal; i++) {
     if (i % 4 === 0 && i !== cardsToDeal) {
@@ -30,15 +32,15 @@ export function cardGame(
         cardNumber: firstDeck,
         index: i,
         posX: posX,
-        posZ: posZ + 4,
+        posZ: posZ + radius,
       })
 
       startGame({
         cardDeck: cardDeck,
         cardNumber: firstDeck,
         index: i,
-        posX: posX,
-        posZ: posZ + 4,
+        posX: posX - offset + firstDeck * 0.08,
+        posZ: posZ + radius,
       })
     }
     if (i % 4 === 1 && i !== cardsToDeal) {
@@ -48,16 +50,16 @@ export function cardGame(
         cardDeck: cardDeck,
         cardNumber: secondDeck,
         index: i,
-        posX: 4 + posX,
-        posZ: 0 + posZ,
-        orientZ: -1.5708,
+        posX: posX + radius,
+        posZ: posZ,
+        orientZ: -Math.PI / 2,
       })
       startGame({
         cardDeck: cardDeck,
         cardNumber: secondDeck,
         index: i,
-        posX: 4 + 1.1 * gameCardParams.depth * secondDeck + posX,
-        posZ: secondDeck * 0.08 + posZ,
+        posX: posX + radius + 1.1 * gameCardParams.depth * secondDeck,
+        posZ: posZ - offset + secondDeck * 0.08,
         rotX: 0,
         rotY: Math.PI / 2,
         rotZ: -Math.PI / 4 + secondDeck * 0.28,
@@ -70,16 +72,17 @@ export function cardGame(
         cardDeck: cardDeck,
         cardNumber: thirdDeck,
         index: i,
-        posX: 0 + posX,
-        posZ: -4 + posZ,
+        posX: posX,
+        posZ: posZ - radius,
         orientZ: Math.PI,
       })
       startGame({
         cardDeck: cardDeck,
         cardNumber: thirdDeck,
         index: i,
-        posZ: -4 + posZ,
-        rotX: Math.PI / 4,
+        posX: posX - offset + thirdDeck * 0.08,
+        posZ: posZ - radius - 1.1 * gameCardParams.depth * thirdDeck,
+        rotX: 0,
         rotY: Math.PI,
         rotZ: -Math.PI / 4 + thirdDeck * 0.28,
       })
@@ -90,18 +93,18 @@ export function cardGame(
         cardDeck: cardDeck,
         cardNumber: fourthDeck,
         index: i,
-        posX: -4 + posX,
-        posZ: 0 + posZ,
-        orientZ: 1.5708,
+        posX: posX - radius,
+        posZ: posZ,
+        orientZ: Math.PI / 2,
       })
       startGame({
         cardDeck: cardDeck,
         cardNumber: fourthDeck,
         index: i,
-        posX: -4 + 1.1 * gameCardParams.depth * fourthDeck + posX,
-        posZ: -fourthDeck * 0.08 + posZ,
+        posX: posX + 1.1 * gameCardParams.depth * fourthDeck - radius,
+        posZ: posZ + offset - fourthDeck * 0.08,
         rotX: 0,
-        rotY: -1.5708,
+        rotY: -Math.PI / 2,
         rotZ: -Math.PI / 4 + fourthDeck * 0.28,
       })
     }
@@ -109,8 +112,9 @@ export function cardGame(
       moveCard({
         cardDeck: cardDeck,
         index: i,
-        posX: 0 + posX,
-        posZ: 0 + posZ,
+        posX: posX,
+        posY: 1.1 * gameCardParams.depth,
+        posZ: posZ,
         rotX: -Math.PI / 2,
       })
     }
@@ -126,7 +130,7 @@ export function cardGame(
         cardDeck: cardDeck,
         index: i,
         posX: posX,
-        posY: posY,
+        posY: 1.1 * gameCardParams.depth * 2,
         posZ: posZ,
       })
       break
@@ -162,14 +166,14 @@ function moveCard({
   orientZ = 0,
   posX = 0,
   posY = 1.1 * gameCardParams.depth * cardNumber,
-  posZ = 4,
+  posZ = 0.5,
   rotX = Math.PI / 2,
   rotY = 0,
   rotZ = +Math.random().toFixed(3),
 }: AnimateCards) {
   gsap.to(cardDeck[index].model.position, {
     x: posX + +Math.random().toFixed(3) / 4,
-    y: tableHeight + posY,
+    y: cardTableHeight + posY,
     z: posZ + +Math.random().toFixed(3) / 4,
     duration: duration,
     delay: index * duration,
@@ -190,14 +194,14 @@ function startGame({
   orientZ = 0,
   posX = cardNumber * 0.08,
   posY = 1.1 * gameCardParams.depth * cardNumber,
-  posZ = 4,
+  posZ = 0.5,
   rotX = -Math.PI / 4,
   rotY = 0,
   rotZ = Math.PI / 3 - cardNumber * 0.28,
 }: AnimateCards) {
   gsap.to(cardDeck[index].model.position, {
     x: posX,
-    y: tableHeight + posY,
+    y: cardTableHeight + posY,
     z: posZ,
     duration: duration * 2,
     delay: cardsToDeal * duration + duration * 1.5,
@@ -211,7 +215,7 @@ function startGame({
   })
   gsap.to(cardDeck[index].model.position, {
     x: posX,
-    y: tableHeight + posY + 2,
+    y: cardTableHeight + posY + 1,
     z: posZ,
     duration: duration * 2,
     delay: cardsToDeal * duration + duration * 3,
@@ -229,7 +233,7 @@ function makeTurn({
   cardDeck,
   index,
   posX = 0,
-  posY = 0,
+  posY = 1.1 * gameCardParams.depth * 2,
   posZ = 0,
 }: {
   cardDeck: GameCard[]
@@ -241,15 +245,15 @@ function makeTurn({
   const randomZ = Math.random()
   gsap.to(cardDeck[index].model.position, {
     x: 0 + posX,
-    y: 0.28 + posY,
+    y: cardTableHeight + 0.28 + posY,
     z: -0.28 + posZ,
     duration: duration * 2,
     delay: cardsToDeal * duration + duration * 6,
   })
   gsap.to(cardDeck[index].model.position, {
-    x: 0 + posX,
-    y: tableHeight + gameCardParams.depth * 2 * 1.1 + posY,
-    z: 0 + posZ,
+    x: posX,
+    y: cardTableHeight + posY,
+    z: posZ,
     duration: duration * 2,
     delay: cardsToDeal * duration + duration * 8,
   })

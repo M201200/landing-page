@@ -29,14 +29,14 @@ export function dice({
   posX = 0,
   posY = 1,
   posZ = 0,
-  scale = 0.4,
+  scale = 0.15,
 } = {}): PhysicalObject {
   const model = createDiceModel().clone()
   model.position.set(posX, posY, posZ)
   model.scale.set(scale, scale, scale)
 
   const body = new Body({
-    mass: 0.3,
+    mass: 0.5,
     shape: new Box(new Vec3(0.5 * scale, 0.5 * scale, 0.5 * scale)),
     sleepTimeLimit: 0.02,
   })

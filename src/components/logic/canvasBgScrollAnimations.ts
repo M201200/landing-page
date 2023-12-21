@@ -1,10 +1,10 @@
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/all"
 
-export function mainScrollAnimations() {
+export function canvasBgScrollAnimations() {
   gsap.registerPlugin(ScrollTrigger)
 
-  gsap.to("main", {
+  gsap.to("canvas", {
     scrollTrigger: {
       trigger: ".game-links",
       start: "top center",
@@ -13,7 +13,7 @@ export function mainScrollAnimations() {
     },
     backgroundColor: "#fee8ff",
   })
-  gsap.to("main", {
+  gsap.to("canvas", {
     scrollTrigger: {
       trigger: ".jigsaw-text",
       start: "top center",
@@ -22,7 +22,7 @@ export function mainScrollAnimations() {
     },
     backgroundColor: "#95e08b",
   })
-  gsap.to("main", {
+  gsap.to("canvas", {
     scrollTrigger: {
       trigger: "#jigsaw",
       start: "top center",
@@ -31,7 +31,7 @@ export function mainScrollAnimations() {
     },
     backgroundColor: "#ede47d",
   })
-  gsap.to("main", {
+  gsap.to("canvas", {
     scrollTrigger: {
       trigger: ".board-text",
       start: "top center",
@@ -40,7 +40,7 @@ export function mainScrollAnimations() {
     },
     backgroundColor: "#e28f87",
   })
-  gsap.to("main", {
+  gsap.to("canvas", {
     scrollTrigger: {
       trigger: "#board",
       start: "top center",
@@ -49,7 +49,7 @@ export function mainScrollAnimations() {
     },
     backgroundColor: "#d09db6",
   })
-  gsap.to("main", {
+  gsap.to("canvas", {
     scrollTrigger: {
       trigger: ".cards-text",
       start: "top center",
@@ -58,7 +58,7 @@ export function mainScrollAnimations() {
     },
     backgroundColor: "#6dfa6e",
   })
-  gsap.to("main", {
+  gsap.to("canvas", {
     scrollTrigger: {
       trigger: "#cards",
       start: "top center",

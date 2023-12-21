@@ -6,7 +6,7 @@ import {
   TextureLoader,
 } from "three"
 
-import { Body, Box, Material, Quaternion, Vec3 } from "cannon-es"
+import { Body, Box, Material, Vec3 } from "cannon-es"
 
 import type { PhysicalObject } from "../../types/3dObjects"
 
@@ -29,7 +29,7 @@ export function board({ posX = 0, posY = 1, posZ = 0 } = {}): PhysicalObject {
     boardParams.segmentsEdge
   )
 
-  const texture = textureLoader.load("./public/assets/game-min.jpg")
+  const texture = textureLoader.load("./assets/game-min.jpg")
   texture.colorSpace = SRGBColorSpace
 
   const boardMaterial = [
@@ -63,16 +63,16 @@ export function board({ posX = 0, posY = 1, posZ = 0 } = {}): PhysicalObject {
         boardParams.depth / 2
       )
     ),
-    position: new Vec3(model.position.x, model.position.y, model.position.z),
-    quaternion: new Quaternion(
-      model.quaternion.x,
-      model.quaternion.y,
-      model.quaternion.z,
-      model.quaternion.w
-    ),
-    sleepTimeLimit: 0.2,
+    allowSleep: true,
   })
-  body.allowSleep = true
+
+  body.position.set(posX, posY, posZ)
+  body.quaternion.set(
+    model.quaternion.x,
+    model.quaternion.y,
+    model.quaternion.z,
+    model.quaternion.w
+  )
   body.sleep()
 
   return { model, body }

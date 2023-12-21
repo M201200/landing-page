@@ -1,7 +1,10 @@
 import gsap from "gsap"
 import type { JigsawPiece } from "../../types/3dObjects"
-import { tableHeight } from "../3dObjects/Table"
-import { jigsawColumns, jigsawRows, pieceScale } from "../complexObjects/Jigsaw"
+import {
+  jigsawColumns,
+  jigsawRows,
+  pieceScale,
+} from "../complexObjects/JigsawPieces"
 
 const jigsawRadiusX = (pieceScale * jigsawColumns) / 2 - pieceScale / 2
 const jigsawRadiusZ = (pieceScale * jigsawRows) / 2 - pieceScale / 2
@@ -22,7 +25,7 @@ export function jigsawAssemble(
         index: idx,
         toX:
           -jigsawRadiusX + pieceScale + (piece.column - 1) * pieceScale + posX,
-        toY: tableHeight + posY,
+        toY: posY,
         toZ: jigsawRadiusZ - pieceScale - (piece.row - 1) * pieceScale + posZ,
       })
     }
@@ -33,7 +36,7 @@ export function jigsawAssemble(
         index: idx,
         toX:
           -jigsawRadiusX + pieceScale + (piece.column - 1) * pieceScale + posX,
-        toY: tableHeight + posY,
+        toY: posY,
         toZ: -jigsawRadiusZ + posZ,
       })
     }
@@ -46,7 +49,7 @@ export function jigsawAssemble(
         piece: piece,
         index: idx,
         toX: jigsawRadiusX + posX,
-        toY: tableHeight + posY,
+        toY: posY,
         toZ: jigsawRadiusZ - pieceScale - (piece.row - 1) * pieceScale + posZ,
         rotate: true,
         rotX: 0.5,
@@ -65,7 +68,7 @@ export function jigsawAssemble(
         index: idx,
         toX:
           jigsawRadiusX - pieceScale - (piece.column - 2) * pieceScale + posX,
-        toY: tableHeight + posY,
+        toY: posY,
         toZ: jigsawRadiusZ + posZ,
         rotate: true,
         rotX: 0,
@@ -79,7 +82,7 @@ export function jigsawAssemble(
         piece: piece,
         index: idx,
         toX: -jigsawRadiusX + posX,
-        toY: tableHeight + posY,
+        toY: posY,
         toZ: -jigsawRadiusZ + pieceScale + (piece.row - 2) * pieceScale + posZ,
         rotate: true,
         rotX: -0.5,
@@ -94,7 +97,7 @@ export function jigsawAssemble(
         piece: piece,
         index: idx,
         toX: -jigsawRadiusX + posX,
-        toY: tableHeight + posY,
+        toY: posY,
         toZ: -jigsawRadiusZ + posZ,
       })
     }
@@ -103,7 +106,7 @@ export function jigsawAssemble(
         piece: piece,
         index: idx,
         toX: jigsawRadiusX + posX,
-        toY: tableHeight + posY,
+        toY: posY,
         toZ: -jigsawRadiusZ + posZ,
         rotate: true,
         rotX: 0.5,
@@ -117,7 +120,7 @@ export function jigsawAssemble(
         piece: piece,
         index: idx,
         toX: jigsawRadiusX + posX,
-        toY: tableHeight + posY,
+        toY: posY,
         toZ: jigsawRadiusZ + posZ,
         rotate: true,
         rotX: 0,
@@ -131,7 +134,7 @@ export function jigsawAssemble(
         piece: piece,
         index: idx,
         toX: -jigsawRadiusX + posX,
-        toY: tableHeight + posY,
+        toY: posY,
         toZ: jigsawRadiusZ + posZ,
         rotate: true,
         rotX: -0.5,

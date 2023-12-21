@@ -54,7 +54,6 @@ function addDiceEvents(dice: PhysicalObject) {
 }
 
 function MakeTurn(score: number) {
-  RedPiece.body.mass = 0
   switch (score) {
     case 1:
       {
@@ -119,7 +118,6 @@ function MakeTurn(score: number) {
       }
       break
   }
-  RedPiece.body.mass = 0.2
 }
 
 type AnimateTurn = {
@@ -156,13 +154,15 @@ function throwDice(dice: PhysicalObject) {
   dice.body.velocity.setZero()
   dice.body.angularVelocity.setZero()
 
-  const force = 1 + Math.random()
+  dice.body.position.y += 1.6
+
+  const force = 0.05 + Math.random() / 100
   dice.body.applyImpulse(
-    new Vec3(-force, force, 0),
+    new Vec3(force, force / 4, force),
     new Vec3(
-      dice.body.position.x,
+      dice.body.position.x - 0.1,
       dice.body.position.y,
-      dice.body.position.z + 0.2
+      dice.body.position.z - 0.2
     )
   )
 

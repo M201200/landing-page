@@ -6,7 +6,6 @@ import Scene from "../components/Scene.astro"
 
 <Layout title="Playground">
   <main>
-    <Scene />
     <section class="welcome-screen">
       <h1 class="welcome-header">
         Welcome to <span class="logo">Playground!</span>
@@ -33,17 +32,20 @@ import Scene from "../components/Scene.astro"
     <section class="game-text board-text">
       <h2>Enjoy a delightful time playing our board game</h2>
     </section>
-    <section id="board"></section>
+    <section id="board">
+      <button id="roll">Roll dice</button>
+    </section>
     <section class="game-text cards-text">
       <h2>Make your party fun with card game</h2>
     </section>
     <section id="cards"></section>
+    <Scene />
   </main>
 </Layout>
 
 <script>
-  import { mainScrollAnimations } from "../components/logic/mainScrollAnimations"
-  mainScrollAnimations()
+  import { canvasBgScrollAnimations } from "../components/logic/canvasBgScrollAnimations"
+  canvasBgScrollAnimations()
 </script>
 
 <style>
@@ -61,11 +63,17 @@ import Scene from "../components/Scene.astro"
     max-width: 60ch;
   }
 
-  h1,
+  /* h1,
   h2,
   p {
     z-index: 1;
   }
+
+  button {
+    position: relative;
+    z-index: 200;
+    cursor: pointer;
+  } */
   main {
     position: relative;
     display: grid;
@@ -75,7 +83,7 @@ import Scene from "../components/Scene.astro"
     text-align: center;
     /* background-color: rgba(160, 157, 157, 0.733); */
     /* height: 400lvh; */
-    background-color: #fff0f0;
+    /* background-color: #fff0f0; */
   }
   section {
     height: 100lvh;

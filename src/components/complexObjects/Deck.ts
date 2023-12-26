@@ -1,26 +1,33 @@
-import { cardBox, cardBoxDepth, cardBoxSideHeight } from "../3dObjects/CardBox"
+import { cardBox } from "../3dObjects/CardBox"
 import {
   gameCard,
-  gameCardParams,
   redCard,
   yellowCard,
   greenCard,
   blueCard,
 } from "../3dObjects/GameCard"
-import type { GameCard } from "../../types/3dObjects"
-import {
-  cardTable,
-  cardTableHeight,
-  cardTableRadius,
-} from "../3dObjects/CardTable"
+import type { Deck, GameCard } from "../../types/3dObjects"
+import { cardTable } from "../3dObjects/CardTable"
 
-export function deck({ posZ = 0, scale = 1 } = {}) {
-  const offsetXZ = (cardBoxDepth * scale) / 2
-  const offsetY = (cardBoxSideHeight * scale) / 2 + offsetXZ
-  const position = cardTableRadius * 0.72
+export function deck({ posZ = 0, scale = 1 } = {}): Deck {
+  const table = cardTable({ posY: -7, posZ })
+  const card = gameCard({ scale: scale })
+
+  const deckSize = 40
+  const offsetXZ = (card.params.depth * scale) / 2
+  const offsetY = (card.params.depth * deckSize * 1.02 * scale) / 2 + offsetXZ
+  const position = table.radius * 0.72
   const cardPositionX = position - offsetXZ
   const cardPositionZ = posZ + position / 1.8 - offsetXZ
   const cards: GameCard[] = []
+  const box = cardBox({
+    posX: position,
+    posY: table.height,
+    posZ: posZ + position / 1.8,
+    cardParams: card.params,
+    deckSize: deckSize,
+    scale,
+  })
 
   for (let i = 0; i < 10; i++) {
     cards.push(
@@ -28,8 +35,7 @@ export function deck({ posZ = 0, scale = 1 } = {}) {
         faceColor: redCard,
         number: i,
         posX: cardPositionX,
-        posY:
-          cardTableHeight + gameCardParams.depth * scale * (i + 1) - offsetY,
+        posY: table.height + card.params.depth * scale * (i + 1) - offsetY,
         posZ: cardPositionZ,
         scale: scale,
       })
@@ -39,8 +45,7 @@ export function deck({ posZ = 0, scale = 1 } = {}) {
         faceColor: yellowCard,
         number: i,
         posX: cardPositionX,
-        posY:
-          cardTableHeight + gameCardParams.depth * scale * (i + 11) - offsetY,
+        posY: table.height + card.params.depth * scale * (i + 11) - offsetY,
         posZ: cardPositionZ,
         scale: scale,
       })
@@ -50,8 +55,7 @@ export function deck({ posZ = 0, scale = 1 } = {}) {
         faceColor: greenCard,
         number: i,
         posX: cardPositionX,
-        posY:
-          cardTableHeight + gameCardParams.depth * scale * (i + 21) - offsetY,
+        posY: table.height + card.params.depth * scale * (i + 21) - offsetY,
         posZ: cardPositionZ,
         scale: scale,
       })
@@ -61,20 +65,11 @@ export function deck({ posZ = 0, scale = 1 } = {}) {
         faceColor: blueCard,
         number: i,
         posX: cardPositionX,
-        posY:
-          cardTableHeight + gameCardParams.depth * scale * (i + 31) - offsetY,
+        posY: table.height + card.params.depth * scale * (i + 31) - offsetY,
         posZ: cardPositionZ,
         scale: scale,
       })
     )
   }
-  const box = cardBox({
-    posX: position,
-    posY: cardTableHeight,
-    posZ: posZ + position / 1.8,
-    scale,
-  })
-  const table = cardTable({ posY: -7, posZ })
-
   return { cards, box, table }
 }

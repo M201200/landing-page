@@ -3,39 +3,76 @@
 <script>
   import {
     renderEnvironment,
-    scene,
     updateSceneSize,
-    physicalObjectsStatic,
-    physicalObjectArraysToAnimate,
   } from "./logic/renderEnvironment.ts"
 
-  import {
-    cardTable,
-    cardTableHeight,
-    cardTableRadius,
-  } from "./3dObjects/CardTable.ts"
   import { jigsaw } from "./complexObjects/Jigsaw.ts"
   import { boardGameBundle } from "./complexObjects/BoardGameBundle.ts"
   import { deck } from "./complexObjects/Deck"
   import { jigsawAssemble } from "./logic/jigsawAssemble.ts"
+  import { jigsawStart } from "./logic/jigsawStart.ts"
   import { boardGame } from "./logic/boardGame.ts"
   import { cardGame } from "./logic/cardGame.ts"
 
   import { cameraPositionScroll } from "./logic/cameraPositionScroll.ts"
   import { welcomeScreenAnimation } from "./logic/welcomeScreenAnimation.ts"
-  import { jigsawTable, jigsawTableHeight } from "./3dObjects/JigsawTable"
-  import { boardTable, boardTableHeight } from "./3dObjects/BoardTable"
+  import {
+    AmbientLight,
+    PerspectiveCamera,
+    PointLight,
+    Scene,
+    WebGLRenderer,
+  } from "three"
+  import { Vec3, World } from "cannon-es"
 
-  window.addEventListener("resize", updateSceneSize)
-
+  const canvas = document.querySelector("canvas")!
   const buttonRoll = document.querySelector("#roll")!
+  const buttonAssemble = document.querySelector("#assemble")!
 
-  const JigsawTable = jigsawTable({ posZ: 20, scale: 2 })
-  const BoardTable = boardTable({ posZ: 50, scale: 2.5 })
+  ///////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////
 
-  const Jigsaw = jigsaw({ posY: jigsawTableHeight, posZ: 18 })
+  const renderer = new WebGLRenderer({
+    alpha: true,
+    antialias: true,
+    canvas: canvas,
+  })
+  const scene = new Scene()
+  const camera = new PerspectiveCamera(
+    45,
+    window.innerWidth / window.innerHeight,
+    1,
+    300
+  )
+  camera.position.set(0, 4, 0)
+  camera.lookAt(0, 0, 0)
+  const ambientLight = new AmbientLight(0xffffff, 1)
+  scene.add(ambientLight)
+  const topLight = new PointLight(0xffffff, 1000)
+  topLight.position.set(-8, 15, 5)
+  topLight.castShadow = true
+  topLight.shadow.mapSize.width = 4096
+  topLight.shadow.mapSize.height = 4096
+  topLight.shadow.camera.near = 5
+  topLight.shadow.camera.far = 400
+  topLight.shadow.bias = -0.00003
+  scene.add(topLight)
+  const world = new World({
+    allowSleep: true,
+    gravity: new Vec3(0, -50, 0),
+  })
+  world.defaultContactMaterial.restitution = 0.3
+  world.defaultContactMaterial.contactEquationStiffness = 1e7
+  world.defaultContactMaterial.contactEquationRelaxation = 4
+
+  ///////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////
+
+  window.addEventListener("resize", () => updateSceneSize(camera, renderer))
+
+  const Jigsaw = jigsaw({ posZ: 20 })
+
   const BoardGameBundle = boardGameBundle({
-    posY: boardTableHeight,
     posZ: 50,
   })
 
@@ -46,20 +83,42 @@
 
   buttonRoll.addEventListener("click", () => boardGame(BoardGameBundle))
 
-  physicalObjectsStatic.push(BoardTable)
-  physicalObjectArraysToAnimate.push(BoardGameBundle)
+  buttonAssemble.addEventListener("click", () => {
+    jigsawStart(Jigsaw)
+    setTimeout(
+      () =>
+        jigsawAssemble(Jigsaw, {
+          posY: Jigsaw.table.height,
+          posZ: 19.7,
+        }),
+      1500
+    )
+  })
 
-  Jigsaw.pieces.forEach((piece) => scene.add(piece.model))
-  Deck.cards.forEach((piece) => scene.add(piece.model))
-  scene.add(JigsawTable, Deck.table, Jigsaw.box, Deck.box)
+  Jigsaw.pieces.jigsawPieces.forEach((piece) => scene.add(piece.model))
+  Deck.cards.forEach((card) => scene.add(card.model))
+  scene.add(Jigsaw.table.model, Jigsaw.box.model, Deck.table.model, Deck.box)
 
-  renderEnvironment()
+  renderEnvironment({
+    renderer: renderer,
+    scene: scene,
+    world: world,
+    camera: camera,
+    physicalObjectsStatic: [BoardGameBundle.Table],
+    physicalObjectsToAnimate: [
+      BoardGameBundle.Dice,
+      BoardGameBundle.Board,
+      BoardGameBundle.GamePieces.BluePiece,
+      BoardGameBundle.GamePieces.YellowPiece,
+      BoardGameBundle.GamePieces.RedPiece,
+      BoardGameBundle.GamePieces.GreenPiece,
+    ],
+  })
 
-  cameraPositionScroll()
+  cameraPositionScroll(camera, topLight)
 
-  welcomeScreenAnimation()
-  // jigsawAssemble(Jigsaw, { posY: jigsawTableHeight, posZ: 20 })
-  cardGame(Deck.cards, { posZ: 80, scale: 0.7 })
+  welcomeScreenAnimation(scene)
+  cardGame(Deck, { posZ: 80, scale: 0.7 })
 </script>
 
 <style>
@@ -71,7 +130,7 @@
     grid-row: 1;
     grid-column: 1/-1;
 
-    /* z-index: -1; */
+    z-index: -1;
 
     opacity: 0;
     animation: fadeIn 1s ease-in-out 1s forwards;

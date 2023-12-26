@@ -1,19 +1,16 @@
 import gsap from "gsap"
-import type { PhysicalObject } from "../../types/3dObjects"
+import type { BoardGameBundle, PhysicalObject } from "../../types/3dObjects"
 import { Vec3 } from "cannon-es"
 
 let RedPiece: PhysicalObject
+let boardPath: { x: number; z: number }[]
 
-export function boardGame(BoardGameBundle: PhysicalObject[]) {
-  BoardGameBundle.forEach((object) => {
-    if (object.model.name === "Dice") {
-      addDiceEvents(object)
-      throwDice(object)
-    }
-    if (object.model.name === "RedPiece") {
-      RedPiece = object
-    }
-  })
+export function boardGame(BoardGameBundle: BoardGameBundle) {
+  RedPiece = BoardGameBundle.GamePieces.RedPiece
+  boardPath = BoardGameBundle.Board.path
+
+  addDiceEvents(BoardGameBundle.Dice)
+  throwDice(BoardGameBundle.Dice)
 }
 
 function addDiceEvents(dice: PhysicalObject) {
@@ -24,7 +21,7 @@ function addDiceEvents(dice: PhysicalObject) {
     //@ts-ignore
     e.target.quaternion.toEuler(euler)
 
-    const eps = 0.3
+    const eps = 0.5
     let isZero = (angle: number) => Math.abs(angle) < eps
     let isHalfPi = (angle: number) => Math.abs(angle - 0.5 * Math.PI) < eps
     let isMinusHalfPi = (angle: number) => Math.abs(0.5 * Math.PI + angle) < eps
@@ -54,98 +51,31 @@ function addDiceEvents(dice: PhysicalObject) {
 }
 
 function MakeTurn(score: number) {
-  switch (score) {
-    case 1:
-      {
-        animateTurn({
-          piece: RedPiece,
-          offsetX: -0.05,
-          offsetY: 0.4,
-          offsetZ: -0.28,
-          duration: 0.4,
-        })
-      }
-      break
-    case 2:
-      {
-        animateTurn({
-          piece: RedPiece,
-          offsetX: -0.1,
-          offsetY: 0.4,
-          offsetZ: -0.6,
-          duration: 0.6,
-        })
-      }
-      break
-    case 3:
-      {
-        animateTurn({
-          piece: RedPiece,
-          offsetX: -0.1,
-          offsetY: 0.4,
-          offsetZ: -1,
-        })
-      }
-      break
-    case 4:
-      {
-        animateTurn({
-          piece: RedPiece,
-          offsetX: -0.1,
-          offsetY: 0.4,
-          offsetZ: -1.4,
-        })
-      }
-      break
-    case 5:
-      {
-        animateTurn({
-          piece: RedPiece,
-          offsetX: 0,
-          offsetY: 0.4,
-          offsetZ: -1.6,
-        })
-      }
-      break
-    case 6:
-      {
-        animateTurn({
-          piece: RedPiece,
-          offsetX: +0.1,
-          offsetY: 0.4,
-          offsetZ: -2.2,
-        })
-      }
-      break
-  }
+  animateTurn({
+    piece: RedPiece,
+    pathIndex: score,
+    duration: 0.8,
+  })
 }
 
 type AnimateTurn = {
   piece: PhysicalObject
-  offsetX: number
-  offsetY: number
-  offsetZ: number
+  pathIndex: number
   duration?: number
 }
 
-function animateTurn({
-  piece,
-  offsetX,
-  offsetY,
-  offsetZ,
-  duration = 1,
-}: AnimateTurn) {
+function animateTurn({ piece, pathIndex, duration = 1 }: AnimateTurn) {
   const timeline = gsap.timeline()
   timeline.to(piece.body.position, {
     x: piece.body.position.x,
-    y: piece.body.position.y + offsetY,
+    y: piece.body.position.y + 0.4,
     z: piece.body.position.z,
     duration: duration / 4,
   })
   timeline.to(piece.body.position, {
-    x: piece.body.position.x + offsetX,
+    x: boardPath[pathIndex].x,
     y: piece.body.position.y,
-    z: piece.body.position.z + offsetZ,
+    z: boardPath[pathIndex].z,
     duration: duration,
   })
 }

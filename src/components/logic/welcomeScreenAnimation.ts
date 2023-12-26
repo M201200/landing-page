@@ -5,11 +5,10 @@ import {
   greenCard,
   yellowCard,
 } from "../3dObjects/GameCard"
-import { scene, camera } from "./renderEnvironment"
 import { puzzlePiece } from "../3dObjects/PuzzlePiece"
-import { SRGBColorSpace, TextureLoader, RepeatWrapping } from "three"
+import { SRGBColorSpace, TextureLoader, RepeatWrapping, Scene } from "three"
 
-export function welcomeScreenAnimation() {
+export function welcomeScreenAnimation(scene: Scene) {
   const Card1 = gameCard({
     faceColor: yellowCard,
     number: 2,

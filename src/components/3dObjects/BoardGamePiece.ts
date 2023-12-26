@@ -7,7 +7,7 @@ import {
   MeshStandardMaterial,
 } from "three"
 
-import type { PhysicalObject } from "../../types/3dObjects"
+import type { BoardGamePiece } from "../../types/3dObjects"
 
 export function boardGamePiece({
   color = "eeeeee",
@@ -18,7 +18,7 @@ export function boardGamePiece({
   rotX = 0,
   rotY = 0,
   rotZ = 0,
-} = {}): PhysicalObject {
+} = {}): BoardGamePiece {
   const params = {
     basisTop: 0.8 * paramsScale,
     basisBottom: 1 * paramsScale,
@@ -119,5 +119,5 @@ export function boardGamePiece({
     model.quaternion.w
   )
   body.sleep()
-  return { model, body }
+  return { model, body, params }
 }

@@ -1,6 +1,7 @@
 import { Group, Mesh, MeshPhongMaterial, MeshStandardMaterial } from "three"
 import { RoundedBoxGeometry } from "three/examples/jsm/Addons.js"
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js"
+import type { JigsawTable } from "../../types/3dObjects"
 
 type JigsawTableProps = {
   posX?: number
@@ -12,18 +13,6 @@ type JigsawTableProps = {
   scale?: number
 }
 
-const params = {
-  tableTopWidth: 2,
-  tableTopHeight: 1,
-  tableTopDepth: 0.05,
-  tableTopRadius: 0.4,
-  tableLegSize: 0.08,
-  tableLegHeight: 0.5,
-  tableLegRadius: 0.6,
-}
-
-export let jigsawTableHeight: number
-
 export function jigsawTable({
   posX = 0,
   posY = -7,
@@ -32,24 +21,35 @@ export function jigsawTable({
   rotY = 0,
   rotZ = 0,
   scale = 1,
-}: JigsawTableProps = {}) {
-  jigsawTableHeight =
-    (params.tableTopDepth / 2 + params.tableLegHeight) * scale + posY
+}: JigsawTableProps = {}): JigsawTable {
+  const params = {
+    topWidth: 2,
+    topHeight: 1,
+    topDepth: 0.05,
+    topRadius: 0.4,
+    legSize: 0.08,
+    legHeight: 0.5,
+    legRadius: 0.6,
+    scale: scale,
+  }
+
+  const height = (params.topDepth / 2 + params.legHeight) * scale + posY
+
   const tableTopGeo = new RoundedBoxGeometry(
-    params.tableTopWidth,
-    params.tableTopHeight,
-    params.tableTopDepth,
+    params.topWidth,
+    params.topHeight,
+    params.topDepth,
     1,
-    params.tableTopRadius
+    params.topRadius
   )
-  tableTopGeo.rotateX(Math.PI / 2).translate(0, params.tableLegHeight, 0)
+  tableTopGeo.rotateX(Math.PI / 2).translate(0, params.legHeight, 0)
 
   const tableLegGeo = new RoundedBoxGeometry(
-    params.tableLegSize,
-    params.tableLegHeight,
-    params.tableLegSize,
+    params.legSize,
+    params.legHeight,
+    params.legSize,
     1,
-    params.tableLegRadius
+    params.legRadius
   )
 
   const tableTopSurfaceMaterial = new MeshPhongMaterial({
@@ -85,36 +85,36 @@ export function jigsawTable({
         .rotateX(-Math.PI / 6)
         .rotateZ(-Math.PI / 6)
         .translate(
-          -params.tableTopWidth * 0.4,
-          params.tableLegHeight * 0.6,
-          params.tableTopHeight * 0.4
+          -params.topWidth * 0.4,
+          params.legHeight * 0.6,
+          params.topHeight * 0.4
         ),
       tableLegGeo
         .clone()
         .rotateX(-Math.PI / 6)
         .rotateZ(Math.PI / 6)
         .translate(
-          params.tableTopWidth * 0.4,
-          params.tableLegHeight * 0.6,
-          params.tableTopHeight * 0.4
+          params.topWidth * 0.4,
+          params.legHeight * 0.6,
+          params.topHeight * 0.4
         ),
       tableLegGeo
         .clone()
         .rotateX(Math.PI / 6)
         .rotateZ(Math.PI / 6)
         .translate(
-          params.tableTopWidth * 0.4,
-          params.tableLegHeight * 0.6,
-          -params.tableTopHeight * 0.4
+          params.topWidth * 0.4,
+          params.legHeight * 0.6,
+          -params.topHeight * 0.4
         ),
       tableLegGeo
         .clone()
         .rotateX(Math.PI / 6)
         .rotateZ(-Math.PI / 6)
         .translate(
-          -params.tableTopWidth * 0.4,
-          params.tableLegHeight * 0.6,
-          -params.tableTopHeight * 0.4
+          -params.topWidth * 0.4,
+          params.legHeight * 0.6,
+          -params.topHeight * 0.4
         ),
     ]),
     tableLegMaterial
@@ -130,5 +130,5 @@ export function jigsawTable({
   model.rotation.set(rotX, rotY, rotZ)
   model.scale.set(scale, scale, scale)
 
-  return model
+  return { model, params, height }
 }

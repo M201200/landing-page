@@ -8,57 +8,62 @@ import {
   Group,
 } from "three"
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js"
+import type { CardTable } from "../../types/3dObjects"
 
-const params = {
-  scale: 2,
-  tableTopRadius: 1,
-  tableTopHeight: 0.04,
-  tableTopSegments: 32,
-  tableBorderRadialSegments: 13,
-  tableBorderTubularSegments: 80,
-  tableLegSize: 0.06,
-  tableLegHeight: 0.9,
-}
+export function cardTable({
+  posX = 0,
+  posY = -7,
+  posZ = 0,
+  scale = 2,
+} = {}): CardTable {
+  const params = {
+    topRadius: 1,
+    topHeight: 0.04,
+    topSegments: 32,
+    borderRadialSegments: 13,
+    borderTubularSegments: 80,
+    legSize: 0.06,
+    legHeight: 0.9,
+    scale: scale,
+  }
 
-export const cardTableRadius = params.tableTopRadius * params.scale
+  const radius = params.topRadius * params.scale
+  const height =
+    -7 + (params.legHeight + params.topHeight * 2) * params.scale * 1.01
 
-export const cardTableHeight =
-  -7 + (params.tableLegHeight + params.tableTopHeight * 2) * params.scale * 1.01
-
-export function cardTable({ posX = 0, posY = -7, posZ = 0 } = {}) {
   const position = new Vector3(
     posX,
-    posY + (params.tableLegHeight + params.tableTopHeight) * params.scale,
+    posY + (params.legHeight + params.topHeight) * params.scale,
     posZ
   )
   const rotationY = Math.PI / 4
 
   const tableTopGeo = new CylinderGeometry(
-    params.tableTopRadius,
-    params.tableTopRadius,
-    params.tableTopHeight,
-    params.tableTopSegments
+    params.topRadius,
+    params.topRadius,
+    params.topHeight,
+    params.topSegments
   )
   const tableBorderGeo = new TorusGeometry(
-    params.tableTopRadius,
-    params.tableTopHeight / 1.25,
-    params.tableBorderRadialSegments,
-    params.tableBorderTubularSegments
+    params.topRadius,
+    params.topHeight / 1.25,
+    params.borderRadialSegments,
+    params.borderTubularSegments
   )
   const tableLegGeo = new BoxGeometry(
-    params.tableLegSize,
-    params.tableLegHeight,
-    params.tableLegSize
+    params.legSize,
+    params.legHeight,
+    params.legSize
   )
 
   function createTableFrame() {
     return mergeGeometries(
       [
         tableBorderGeo.clone().rotateX(Math.PI / 2),
-        tableLegGeo.clone().translate(-params.tableTopRadius, -0.45, 0),
-        tableLegGeo.clone().translate(params.tableTopRadius, -0.45, 0),
-        tableLegGeo.clone().translate(0, -0.45, params.tableTopRadius),
-        tableLegGeo.clone().translate(0, -0.45, -params.tableTopRadius),
+        tableLegGeo.clone().translate(-params.topRadius, -0.45, 0),
+        tableLegGeo.clone().translate(params.topRadius, -0.45, 0),
+        tableLegGeo.clone().translate(0, -0.45, params.topRadius),
+        tableLegGeo.clone().translate(0, -0.45, -params.topRadius),
         tableBorderGeo
           .clone()
           .rotateX(Math.PI / 2)
@@ -93,5 +98,5 @@ export function cardTable({ posX = 0, posY = -7, posZ = 0 } = {}) {
   model.position.copy(position)
   model.rotateY(rotationY)
 
-  return model
+  return { model, radius, params, height }
 }

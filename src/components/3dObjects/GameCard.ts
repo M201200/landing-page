@@ -13,8 +13,8 @@ import type { GameCard } from "../../types/3dObjects"
 import { cardBackgroundTemplate } from "../templates/CardBackgroundTemplate.ts"
 
 type GameCardProps = {
-  faceColor: string
-  number: number
+  faceColor?: string
+  number?: number
   posX?: number
   posY?: number
   posZ?: number
@@ -22,14 +22,6 @@ type GameCardProps = {
   rotY?: number
   rotZ?: number
   scale?: number
-}
-
-export const gameCardParams = {
-  width: 0.5,
-  height: 0.75,
-  depth: 0.004,
-  segments: 1,
-  radius: 0.4,
 }
 
 const textureLoader = new TextureLoader()
@@ -40,8 +32,8 @@ export const greenCard = "23AC01"
 export const blueCard = "152AEB"
 
 export function gameCard({
-  faceColor,
-  number,
+  faceColor = "eeeeee",
+  number = 0,
   posX = 0,
   posY = 1,
   posZ = 0,
@@ -49,15 +41,23 @@ export function gameCard({
   rotY = 0,
   rotZ = Math.PI,
   scale = 1,
-}: GameCardProps): GameCard {
+}: GameCardProps = {}): GameCard {
+  const params = {
+    width: 0.5,
+    height: 0.75,
+    depth: 0.004,
+    segments: 1,
+    radius: 0.4,
+  }
+
   const model = new Group()
 
   const CardGeo = new RoundedBoxGeometry(
-    gameCardParams.width,
-    gameCardParams.height,
-    gameCardParams.depth,
-    gameCardParams.segments,
-    gameCardParams.radius
+    params.width,
+    params.height,
+    params.depth,
+    params.segments,
+    params.radius
   )
 
   const svgStrBackdrop = cardBackgroundTemplate()
@@ -113,7 +113,7 @@ export function gameCard({
 
     const centerNumber = new Mesh(centerNumberGeo, centerNumberMaterial)
     centerNumber
-      .translateZ(gameCardParams.depth / 2 + textHeight)
+      .translateZ(params.depth / 2 + textHeight)
       .translateX(-centerNumberSize / 2.6)
       .translateY(-centerNumberSize / 2).receiveShadow = true
 
@@ -128,20 +128,16 @@ export function gameCard({
 
     const upperSideNumber = new Mesh(sideNumberGeo, sideNumberMaterial)
     upperSideNumber
-      .translateZ(gameCardParams.depth / 2 + textHeight)
-      .translateX(sideNumberSize / 3.5 - gameCardParams.width / 2)
-      .translateY(
-        sideNumberSize / 2 + gameCardParams.height / 4
-      ).receiveShadow = true
+      .translateZ(params.depth / 2 + textHeight)
+      .translateX(sideNumberSize / 3.5 - params.width / 2)
+      .translateY(sideNumberSize / 2 + params.height / 4).receiveShadow = true
 
     const bottomSideNumber = new Mesh(sideNumberGeo, sideNumberMaterial)
     bottomSideNumber
       .rotateZ(Math.PI)
-      .translateZ(gameCardParams.depth / 2 + textHeight)
-      .translateX(sideNumberSize / 3.5 - gameCardParams.width / 2)
-      .translateY(
-        sideNumberSize / 2 + gameCardParams.height / 4
-      ).receiveShadow = true
+      .translateZ(params.depth / 2 + textHeight)
+      .translateX(sideNumberSize / 3.5 - params.width / 2)
+      .translateY(sideNumberSize / 2 + params.height / 4).receiveShadow = true
 
     const backdropTextSize = 0.16
     const backdropTextGeo = new TextGeometry("RBGY", {
@@ -155,9 +151,9 @@ export function gameCard({
 
     const backdropText = new Mesh(backdropTextGeo, backdropTextMaterial)
     backdropText
-      .translateZ(-gameCardParams.depth / 2 - textHeight * 2)
-      .translateX(-backdropTextSize + gameCardParams.width / 1.9)
-      .translateY(-backdropTextSize / 2 - gameCardParams.height / 3.8)
+      .translateZ(-params.depth / 2 - textHeight * 2)
+      .translateX(-backdropTextSize + params.width / 1.9)
+      .translateY(-backdropTextSize / 2 - params.height / 3.8)
       .rotateZ(-Math.PI / 3.34)
       .rotateY(Math.PI).receiveShadow = true
 
@@ -170,6 +166,7 @@ export function gameCard({
       .translateZ(-0.0001)
       .translateX(-backdropTextSize * 0.05)
       .translateY(-backdropTextSize * 0.05)
+
     model.add(
       centerNumber,
       upperSideNumber,
@@ -183,5 +180,5 @@ export function gameCard({
   model.rotation.set(rotX, rotY, rotZ)
   model.scale.set(scale, scale, scale)
 
-  return { model, faceColor, number }
+  return { model, faceColor, number, params }
 }

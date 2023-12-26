@@ -7,27 +7,18 @@ import {
 } from "three"
 
 import { Body, Box, Material, Vec3 } from "cannon-es"
+import type { Board } from "../../types/3dObjects"
 
-import type { PhysicalObject } from "../../types/3dObjects"
-
-export const boardParams = {
-  size: 3,
-  depth: 0.05,
-  segmentsFront: 1,
-  segmentsEdge: 1,
-}
-
-export function board({ posX = 0, posY = 1, posZ = 0 } = {}): PhysicalObject {
+export function board({
+  posX = 0,
+  posY = 1,
+  posZ = 0,
+  size = 3,
+  depth = 0.05,
+} = {}): Board {
   const textureLoader = new TextureLoader()
 
-  const BoxGeo = new BoxGeometry(
-    boardParams.size,
-    boardParams.size,
-    boardParams.depth,
-    boardParams.segmentsFront,
-    boardParams.segmentsFront,
-    boardParams.segmentsEdge
-  )
+  const BoxGeo = new BoxGeometry(size, size, depth, 1, 1, 1)
 
   const texture = textureLoader.load("./assets/game-min.jpg")
   texture.colorSpace = SRGBColorSpace
@@ -56,13 +47,7 @@ export function board({ posX = 0, posY = 1, posZ = 0 } = {}): PhysicalObject {
   const body = new Body({
     mass: 5,
     material: new Material({ restitution: 0 }),
-    shape: new Box(
-      new Vec3(
-        boardParams.size / 2,
-        boardParams.size / 2,
-        boardParams.depth / 2
-      )
-    ),
+    shape: new Box(new Vec3(size / 2, size / 2, depth / 2)),
     allowSleep: true,
   })
 
@@ -75,5 +60,18 @@ export function board({ posX = 0, posY = 1, posZ = 0 } = {}): PhysicalObject {
   )
   body.sleep()
 
-  return { model, body }
+  const zeroX = body.position.x - size / 2
+  const zeroZ = body.position.z + size / 2
+
+  const path = [
+    { x: zeroX + size * 0.1, z: zeroZ - size * 0.49 },
+    { x: zeroX + size * 0.1, z: zeroZ - size * 0.55 },
+    { x: zeroX + size * 0.09, z: zeroZ - size * 0.59 },
+    { x: zeroX + size * 0.08, z: zeroZ - size * 0.65 },
+    { x: zeroX + size * 0.09, z: zeroZ - size * 0.7 },
+    { x: zeroX + size * 0.1, z: zeroZ - size * 0.75 },
+    { x: zeroX + size * 0.11, z: zeroZ - size * 0.8 },
+  ]
+
+  return { model, body, size, depth, path }
 }

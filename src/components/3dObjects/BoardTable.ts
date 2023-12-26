@@ -1,8 +1,8 @@
-import { Body, Box, Cylinder, Material, Vec3 } from "cannon-es"
+import { Body, Cylinder, Material, Vec3 } from "cannon-es"
 import { CylinderGeometry, Group, Mesh, MeshStandardMaterial } from "three"
 import { RoundedBoxGeometry } from "three/examples/jsm/Addons.js"
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js"
-import type { PhysicalObject } from "../../types/3dObjects"
+import type { BoardTable } from "../../types/3dObjects"
 
 type BoardTableProps = {
   posX?: number
@@ -14,18 +14,6 @@ type BoardTableProps = {
   scale?: number
 }
 
-const params = {
-  tableTopRadiusTop: 1,
-  tableTopRadiusBottom: 0.8,
-  tableTopDepth: 0.05,
-  tableTopSegments: 6,
-  tableLegSize: 0.08,
-  tableLegHeight: 0.5,
-  tableLegRadius: 0.01,
-}
-
-export let boardTableHeight: number
-
 export function boardTable({
   posX = 0,
   posY = -7,
@@ -34,28 +22,38 @@ export function boardTable({
   rotY = 0,
   rotZ = 0,
   scale = 1,
-}: BoardTableProps = {}): PhysicalObject {
-  boardTableHeight =
-    (params.tableTopDepth + params.tableLegHeight) * scale + posY
+}: BoardTableProps = {}): BoardTable {
+  const params = {
+    topRadiusTop: 1,
+    topRadiusBottom: 0.8,
+    topDepth: 0.05,
+    topSegments: 6,
+    legSize: 0.08,
+    legHeight: 0.5,
+    legRadius: 0.01,
+  }
+
+  const height = (params.topDepth + params.legHeight) * scale + posY
+
   const tableTopGeo = new CylinderGeometry(
-    params.tableTopRadiusTop,
-    params.tableTopRadiusBottom,
-    params.tableTopDepth,
-    params.tableTopSegments,
+    params.topRadiusTop,
+    params.topRadiusBottom,
+    params.topDepth,
+    params.topSegments,
     1
   )
   tableTopGeo.rotateY(Math.PI / 2)
-  tableTopGeo.translate(0, params.tableTopDepth * 0.5, 0)
+  tableTopGeo.translate(0, params.topDepth * 0.5, 0)
 
   const tableLegGeo = new RoundedBoxGeometry(
-    params.tableLegSize,
-    params.tableLegHeight,
-    params.tableLegSize,
+    params.legSize,
+    params.legHeight,
+    params.legSize,
     1,
-    params.tableLegRadius
+    params.legRadius
   )
 
-  tableTopGeo.translate(0, params.tableLegHeight, 0)
+  tableTopGeo.translate(0, params.legHeight, 0)
   const tableTopSurfaceMaterial = new MeshStandardMaterial({
     color: 15199742,
     metalness: 1,
@@ -90,30 +88,30 @@ export function boardTable({
       tableLegGeo
         .clone()
         .translate(
-          -params.tableTopRadiusBottom * 0.35,
-          params.tableLegHeight * 0.5,
-          params.tableTopRadiusBottom * 0.35
+          -params.topRadiusBottom * 0.35,
+          params.legHeight * 0.5,
+          params.topRadiusBottom * 0.35
         ),
       tableLegGeo
         .clone()
         .translate(
-          params.tableTopRadiusBottom * 0.35,
-          params.tableLegHeight * 0.5,
-          params.tableTopRadiusBottom * 0.35
+          params.topRadiusBottom * 0.35,
+          params.legHeight * 0.5,
+          params.topRadiusBottom * 0.35
         ),
       tableLegGeo
         .clone()
         .translate(
-          params.tableTopRadiusBottom * 0.35,
-          params.tableLegHeight * 0.5,
-          -params.tableTopRadiusBottom * 0.35
+          params.topRadiusBottom * 0.35,
+          params.legHeight * 0.5,
+          -params.topRadiusBottom * 0.35
         ),
       tableLegGeo
         .clone()
         .translate(
-          -params.tableTopRadiusBottom * 0.35,
-          params.tableLegHeight * 0.5,
-          -params.tableTopRadiusBottom * 0.35
+          -params.topRadiusBottom * 0.35,
+          params.legHeight * 0.5,
+          -params.topRadiusBottom * 0.35
         ),
     ]),
     tableLegMaterial
@@ -137,17 +135,17 @@ export function boardTable({
 
   body.addShape(
     new Cylinder(
-      params.tableTopRadiusTop * scale,
-      params.tableTopRadiusBottom * scale,
-      params.tableTopDepth * scale,
-      params.tableTopSegments
+      params.topRadiusTop * scale,
+      params.topRadiusBottom * scale,
+      params.topDepth * scale,
+      params.topSegments
     ),
-    new Vec3(0, params.tableLegHeight * scale + params.tableLegHeight * 0.12, 0)
+    new Vec3(0, params.legHeight * scale + params.legHeight * 0.12, 0)
   )
 
   body.quaternion.setFromEuler(0, Math.PI / 2, 0)
 
   body.position.set(model.position.x, model.position.y, model.position.z)
 
-  return { model, body }
+  return { model, body, params, height }
 }

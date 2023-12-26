@@ -1,24 +1,23 @@
 import gsap from "gsap"
-import type { JigsawPiece } from "../../types/3dObjects"
-import {
-  jigsawColumns,
-  jigsawRows,
-  pieceScale,
-} from "../complexObjects/JigsawPieces"
-
-const jigsawRadiusX = (pieceScale * jigsawColumns) / 2 - pieceScale / 2
-const jigsawRadiusZ = (pieceScale * jigsawRows) / 2 - pieceScale / 2
+import type { Jigsaw, JigsawPiece } from "../../types/3dObjects"
 
 export function jigsawAssemble(
-  jigsaw: JigsawPiece[],
+  jigsaw: Jigsaw,
   { posX = 0, posY = 0, posZ = 0 } = {}
 ) {
-  jigsaw.forEach((piece, idx) => {
+  const columns = jigsaw.pieces.columns
+  const rows = jigsaw.pieces.rows
+  const pieceScale = jigsaw.pieces.pieceScale
+
+  const jigsawRadiusX = (pieceScale * columns) / 2 - pieceScale / 2
+  const jigsawRadiusZ = (pieceScale * rows) / 2 - pieceScale / 2
+
+  jigsaw.pieces.jigsawPieces.forEach((piece, idx) => {
     if (
       piece.column > 0 &&
-      piece.column < jigsawColumns &&
+      piece.column < columns &&
       piece.row > 0 &&
-      piece.row < jigsawRows
+      piece.row < rows
     ) {
       assembleAnimation({
         piece: piece,
@@ -27,10 +26,15 @@ export function jigsawAssemble(
           -jigsawRadiusX + pieceScale + (piece.column - 1) * pieceScale + posX,
         toY: posY,
         toZ: jigsawRadiusZ - pieceScale - (piece.row - 1) * pieceScale + posZ,
+        rotate: true,
+        rotX: -0.7071,
+        rotY: 0,
+        rotZ: 0,
+        rotW: 0.7071,
       })
     }
 
-    if (piece.column > 0 && piece.column < jigsawColumns && piece.row === 0) {
+    if (piece.column > 0 && piece.column < columns && piece.row === 0) {
       assembleAnimation({
         piece: piece,
         index: idx,
@@ -38,13 +42,14 @@ export function jigsawAssemble(
           -jigsawRadiusX + pieceScale + (piece.column - 1) * pieceScale + posX,
         toY: posY,
         toZ: -jigsawRadiusZ + posZ,
+        rotate: true,
+        rotX: -0.7071,
+        rotY: 0,
+        rotZ: 0,
+        rotW: 0.7071,
       })
     }
-    if (
-      piece.column === jigsawColumns &&
-      piece.row > 0 &&
-      piece.row < jigsawRows
-    ) {
+    if (piece.column === columns && piece.row > 0 && piece.row < rows) {
       assembleAnimation({
         piece: piece,
         index: idx,
@@ -58,11 +63,7 @@ export function jigsawAssemble(
         rotW: -0.5,
       })
     }
-    if (
-      piece.column > 0 &&
-      piece.column < jigsawColumns &&
-      piece.row === jigsawRows
-    ) {
+    if (piece.column > 0 && piece.column < columns && piece.row === rows) {
       assembleAnimation({
         piece: piece,
         index: idx,
@@ -77,7 +78,7 @@ export function jigsawAssemble(
         rotW: 0,
       })
     }
-    if (piece.column === 0 && piece.row > 0 && piece.row < jigsawRows) {
+    if (piece.column === 0 && piece.row > 0 && piece.row < rows) {
       assembleAnimation({
         piece: piece,
         index: idx,
@@ -99,9 +100,14 @@ export function jigsawAssemble(
         toX: -jigsawRadiusX + posX,
         toY: posY,
         toZ: -jigsawRadiusZ + posZ,
+        rotate: true,
+        rotX: -0.7071,
+        rotY: 0,
+        rotZ: 0,
+        rotW: 0.7071,
       })
     }
-    if (piece.column === jigsawColumns && piece.row === 0) {
+    if (piece.column === columns && piece.row === 0) {
       assembleAnimation({
         piece: piece,
         index: idx,
@@ -115,7 +121,7 @@ export function jigsawAssemble(
         rotW: -0.5,
       })
     }
-    if (piece.column === jigsawColumns && piece.row === jigsawRows) {
+    if (piece.column === columns && piece.row === rows) {
       assembleAnimation({
         piece: piece,
         index: idx,
@@ -129,7 +135,7 @@ export function jigsawAssemble(
         rotW: 0,
       })
     }
-    if (piece.column === 0 && piece.row === jigsawRows) {
+    if (piece.column === 0 && piece.row === rows) {
       assembleAnimation({
         piece: piece,
         index: idx,

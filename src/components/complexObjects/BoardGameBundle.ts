@@ -1,38 +1,45 @@
-import { board, boardParams } from "../3dObjects/Board"
+import type { BoardGameBundle } from "../../types/3dObjects"
+import { board } from "../3dObjects/Board"
 import { boardGamePiece } from "../3dObjects/BoardGamePiece"
+import { boardTable } from "../3dObjects/BoardTable"
 import { dice } from "../3dObjects/Dice"
 
-export function boardGameBundle({ posX = 0, posY = 1, posZ = 0 } = {}) {
-  const PiecePosY = posY + boardParams.depth + 0.05
-  const Board = board({ posX: posX, posY: posY, posZ: posZ })
+export function boardGameBundle({
+  posX = 0,
+  posY = 1,
+  posZ = 0,
+} = {}): BoardGameBundle {
+  const Table = boardTable({ posX, posY: posY - 7, posZ, scale: 2.5 })
+  const Board = board({ posX: posX, posY: Table.height, posZ: posZ })
+  const PiecePosY = Table.height + Board.depth + 0.05
   const Dice = dice({
-    posX: 0.34 * boardParams.size + posX,
-    posY: posY,
-    posZ: 0.6 * boardParams.size + posZ,
+    posX: 0.34 * Board.size + posX,
+    posY: Table.height,
+    posZ: 0.6 * Board.size + posZ,
   })
   const RedPiece = boardGamePiece({
     color: "C33333",
-    posX: -0.4 * boardParams.size + posX,
+    posX: Board.path[0].x,
     posY: PiecePosY,
-    posZ: 0 * boardParams.size + posZ,
+    posZ: Board.path[0].z,
   })
   const BluePiece = boardGamePiece({
     color: "2A1BDA",
-    posX: -0.36 * boardParams.size + posX,
+    posX: Board.path[0].x + RedPiece.params.basisBottom * 2.5,
     posY: PiecePosY,
-    posZ: 0 * boardParams.size + posZ,
+    posZ: Board.path[0].z - RedPiece.params.basisBottom * 0.5,
   })
   const GreenPiece = boardGamePiece({
     color: "14AC10",
-    posX: -0.4 * boardParams.size + posX,
+    posX: Board.path[0].x + RedPiece.params.basisBottom * 0.3,
     posY: PiecePosY,
-    posZ: 0.36 * boardParams.size + posZ,
+    posZ: Board.path[0].z + RedPiece.params.basisBottom * 2.5,
   })
   const YellowPiece = boardGamePiece({
     color: "FFCF26",
-    posX: -0.36 * boardParams.size + posX,
+    posX: Board.path[0].x + RedPiece.params.basisBottom * 3,
     posY: PiecePosY,
-    posZ: 0.36 * boardParams.size + posZ,
+    posZ: Board.path[0].z + RedPiece.params.basisBottom * 2,
   })
   Board.model.name = "Board"
   Dice.model.name = "Dice"
@@ -41,5 +48,10 @@ export function boardGameBundle({ posX = 0, posY = 1, posZ = 0 } = {}) {
   GreenPiece.model.name = "GreenPiece"
   YellowPiece.model.name = "YellowPiece"
 
-  return [Board, Dice, RedPiece, BluePiece, GreenPiece, YellowPiece]
+  return {
+    Board,
+    Dice,
+    Table,
+    GamePieces: { RedPiece, BluePiece, GreenPiece, YellowPiece },
+  }
 }

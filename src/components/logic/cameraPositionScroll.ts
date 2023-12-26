@@ -1,13 +1,12 @@
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/all"
+import type { Camera, PointLight } from "three"
 
-import { camera, topLight } from "./renderEnvironment"
-
-export function cameraPositionScroll() {
+export function cameraPositionScroll(camera: Camera, light: PointLight) {
   gsap.registerPlugin(ScrollTrigger)
 
   const timeline = gsap.timeline()
-  gsap.to(topLight.position, {
+  gsap.to(light.position, {
     scrollTrigger: {
       trigger: "main",
       start: "top top",

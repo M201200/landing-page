@@ -1,76 +1,44 @@
 import {
-  AmbientLight,
   Mesh,
   PerspectiveCamera,
   PlaneGeometry,
-  PointLight,
   Scene,
   ShadowMaterial,
   Vector3,
   WebGLRenderer,
 } from "three"
-import { World, Body, Plane, Vec3 } from "cannon-es"
-// import { OrbitControls } from "three/addons/controls/OrbitControls.js"
+import { World, Body, Plane } from "cannon-es"
+import { OrbitControls } from "three/addons/controls/OrbitControls.js"
 // import CannonDebugger from "cannon-es-debugger"
 
 import type { PhysicalObject } from "../../types/3dObjects"
 
-const canvas = document.querySelector("canvas")!
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const renderer = new WebGLRenderer({
-  alpha: true,
-  antialias: true,
-  canvas: canvas,
-})
-
-export const scene = new Scene()
-export const camera = new PerspectiveCamera(
-  45,
-  window.innerWidth / window.innerHeight,
-  1,
-  300
-)
-camera.position.set(0, 4, 0)
-camera.lookAt(0, 0, 0)
-
-export const ambientLight = new AmbientLight(0xffffff, 1)
-scene.add(ambientLight)
-
-export const topLight = new PointLight(0xffffff, 1000)
-topLight.position.set(-8, 15, 5)
-topLight.castShadow = true
-topLight.shadow.mapSize.width = 4096
-topLight.shadow.mapSize.height = 4096
-topLight.shadow.camera.near = 5
-topLight.shadow.camera.far = 400
-topLight.shadow.bias = -0.00003
-scene.add(topLight)
-
-export const world = new World({
-  allowSleep: true,
-  gravity: new Vec3(0, -50, 0),
-})
-world.defaultContactMaterial.restitution = 0.3
-world.defaultContactMaterial.contactEquationStiffness = 1e7
-world.defaultContactMaterial.contactEquationRelaxation = 4
+type RenderEnvironment = {
+  renderer: WebGLRenderer
+  scene: Scene
+  world: World
+  camera: PerspectiveCamera
+  physicalObjectsStatic?: PhysicalObject[]
+  physicalObjectsToAnimate?: PhysicalObject[]
+  physicalObjectArraysToAnimate?: PhysicalObject[][]
+}
 
 // export const cannonDebugger = new CannonDebugger(scene, world)
-// export const controls = new OrbitControls(camera, renderer.domElement)
-export const physicalObjectsStatic: PhysicalObject[] = []
-export const physicalObjectsToAnimate: PhysicalObject[] = []
-export const physicalObjectArraysToAnimate: PhysicalObject[][] = []
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export function renderEnvironment() {
+export function renderEnvironment({
+  renderer,
+  scene,
+  world,
+  camera,
+  physicalObjectsStatic = [],
+  physicalObjectsToAnimate = [],
+  physicalObjectArraysToAnimate = [],
+}: RenderEnvironment) {
   renderer.shadowMap.enabled = true
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
-  updateSceneSize()
+  // const controls = new OrbitControls(camera, renderer.domElement)
+  updateSceneSize(camera, renderer)
   // controls.update()
 
   const floor = new Mesh(
@@ -122,8 +90,10 @@ export function renderEnvironment() {
 
   animationParams({
     scene: scene,
-    camera: camera,
     world: world,
+    renderer: renderer,
+    camera: camera,
+    // controls: controls,
     objects: physicalObjectsToAnimate,
     objectArrays: physicalObjectArraysToAnimate,
   })
@@ -132,7 +102,10 @@ export function renderEnvironment() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export function updateSceneSize() {
+export function updateSceneSize(
+  camera: PerspectiveCamera,
+  renderer: WebGLRenderer
+) {
   camera.aspect = window.innerWidth / window.innerHeight
   camera.updateProjectionMatrix()
   renderer.setSize(window.innerWidth, window.innerHeight)
@@ -143,16 +116,20 @@ export function updateSceneSize() {
 
 type AnimationParams = {
   scene: Scene
-  camera: PerspectiveCamera
   world: World
+  renderer: WebGLRenderer
+  camera: PerspectiveCamera
+  // controls: OrbitControls
   objects: PhysicalObject[]
   objectArrays: PhysicalObject[][]
 }
 
 function animationParams({
   scene,
-  camera,
   world,
+  renderer,
+  camera,
+  // controls,
   objects,
   objectArrays,
 }: AnimationParams) {

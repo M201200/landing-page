@@ -26,10 +26,6 @@ type PuzzlePiece = {
 
 type Path = [number, number, number, number, number, number, boolean?, number?]
 
-export const pieceSize = 1 // DO NOT TOUCH! Values other than 1 will broke texture offset!
-export const pieceDepth = pieceSize * 0.001
-export const pieceOffset = pieceSize * 0.25
-
 export function puzzlePiece({
   column = 0,
   row = 0,
@@ -45,90 +41,96 @@ export function puzzlePiece({
   rotY = 0,
   rotZ = 0,
 }: PuzzlePiece = {}): JigsawPiece {
+  const params = {
+    size: 1, // DO NOT TOUCH! Values other than 1 will broke texture offset!
+    depth: 0.001,
+    offset: 0.25,
+    scale: scale,
+  }
   const upperRecess: Path =
     corner || side || oppositeSide
       ? [0, 0, 0, 0, 0, 0]
       : [
-          -pieceOffset,
-          -pieceOffset * 0.05,
-          pieceOffset * 0.85,
-          pieceSize * 0.25,
+          -params.offset,
+          -params.offset * 0.05,
+          params.offset * 0.85,
+          params.size * 0.25,
           0,
-          3.14159,
+          Math.PI,
           true,
         ]
 
   const sideRecess: Path = corner
     ? [0, 0, 0, 0, 0, 0]
     : [
-        pieceOffset * 0.05,
-        -pieceOffset,
-        pieceSize * 0.25,
-        pieceOffset * 0.85,
-        1.5708,
-        -1.5708,
+        params.offset * 0.05,
+        -params.offset,
+        params.size * 0.25,
+        params.offset * 0.85,
+        Math.PI / 2,
+        -Math.PI / 2,
         true,
       ]
 
   const bottomNotch: Path =
     corner || oppositeSide
       ? [
-          pieceOffset,
-          pieceOffset * 0.05,
-          pieceOffset * 0.85,
-          pieceSize * 0.25,
-          3.14159,
+          params.offset,
+          params.offset * 0.05,
+          params.offset * 0.85,
+          params.size * 0.25,
+          Math.PI,
           0,
           true,
         ]
       : [
-          pieceOffset,
-          -pieceOffset * 0.05,
-          pieceOffset * 0.85,
-          pieceSize * 0.25,
-          3.14159,
+          params.offset,
+          -params.offset * 0.05,
+          params.offset * 0.85,
+          params.size * 0.25,
+          Math.PI,
           0,
           false,
         ]
 
   const puzzleShape = new Shape()
     .moveTo(0, 0)
-    .lineTo(pieceSize * 0.5 - pieceOffset, 0)
+    .lineTo(params.size * 0.5 - params.offset, 0)
     .ellipse(...bottomNotch)
-    .lineTo(pieceSize * 0.5 + pieceOffset, 0)
-    .lineTo(pieceSize, 0)
-    .lineTo(pieceSize, pieceSize * 0.5 - pieceOffset)
+    .lineTo(params.size * 0.5 + params.offset, 0)
+    .lineTo(params.size, 0)
+    .lineTo(params.size, params.size * 0.5 - params.offset)
     .ellipse(
-      pieceOffset * 0.05,
-      pieceOffset,
-      pieceSize * 0.25,
-      pieceOffset * 0.85,
+      params.offset * 0.05,
+      params.offset,
+      params.size * 0.25,
+      params.offset * 0.85,
       -1.5708,
       1.5708,
       false
     )
-    .lineTo(pieceSize, pieceSize * 0.5 + pieceOffset)
-    .lineTo(pieceSize, pieceSize)
-    .lineTo(pieceSize * 0.5 + pieceOffset, pieceSize)
+    .lineTo(params.size, params.size * 0.5 + params.offset)
+    .lineTo(params.size, params.size)
+    .lineTo(params.size * 0.5 + params.offset, params.size)
     .ellipse(...upperRecess)
-    .lineTo(pieceSize * 0.5 - pieceOffset, pieceSize)
-    .lineTo(0, pieceSize)
-    .lineTo(0, pieceSize * 0.5 + pieceOffset)
+    .lineTo(params.size * 0.5 - params.offset, params.size)
+    .lineTo(0, params.size)
+    .lineTo(0, params.size * 0.5 + params.offset)
     .ellipse(...sideRecess)
-    .lineTo(0, pieceSize * 0.5 - pieceOffset)
+    .lineTo(0, params.size * 0.5 - params.offset)
     .lineTo(0, 0)
 
   const geometry = new ExtrudeGeometry(puzzleShape, {
     curveSegments: 24,
-    depth: pieceDepth,
+    depth: params.depth,
     bevelEnabled: true,
     bevelSegments: 4,
     steps: 1,
-    bevelSize: pieceSize * 0.004,
-    bevelThickness: pieceSize * 0.024,
+    bevelSize: params.size * 0.004,
+    bevelThickness: params.size * 0.024,
   })
 
-  geometry.translate(-0.5 * pieceSize, -0.5 * pieceSize, 0 * pieceSize)
+  geometry.translate(-0.5 * params.size, -0.5 * params.size, 0 * params.size)
 
   const material = [
     texture
@@ -161,5 +163,5 @@ export function puzzlePiece({
 
   model.receiveShadow = true
 
-  return { model, column, row }
+  return { model, column, row, params }
 }

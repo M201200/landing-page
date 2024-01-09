@@ -7,11 +7,18 @@ import {
 } from "../3dObjects/GameCard"
 import { puzzlePiece } from "../3dObjects/PuzzlePiece"
 import { SRGBColorSpace, TextureLoader, RepeatWrapping, Scene } from "three"
+import type { JigsawPiece } from "../../types/3dObjects"
+import { shuffleArray } from "./shuffleArray"
+
+const textureLoader = new TextureLoader()
 
 export function welcomeScreenAnimation(scene: Scene) {
+  const duration = 0.28
+  const timeline = gsap.timeline()
+
   const Card1 = gameCard({
     faceColor: yellowCard,
-    number: 2,
+    number: Math.trunc(Math.random() * 10),
     posX: 1.6,
     posY: -6.7,
     posZ: 0.1,
@@ -21,7 +28,7 @@ export function welcomeScreenAnimation(scene: Scene) {
 
   const Card2 = gameCard({
     faceColor: blueCard,
-    number: 7,
+    number: Math.trunc(Math.random() * 10),
     posX: 1.6,
     posY: -6.8,
     posZ: 0.1,
@@ -30,7 +37,7 @@ export function welcomeScreenAnimation(scene: Scene) {
   })
   const Card3 = gameCard({
     faceColor: greenCard,
-    number: 0,
+    number: Math.trunc(Math.random() * 10),
     posX: 1.6,
     posY: -6.9,
     posZ: 0.1,
@@ -38,67 +45,110 @@ export function welcomeScreenAnimation(scene: Scene) {
     rotX: -Math.PI / 2,
   })
 
-  const textureLoader = new TextureLoader()
-  const texture = textureLoader.load("/images/nature.jpg")
-  texture.colorSpace = SRGBColorSpace
-  texture.wrapS = texture.wrapT = RepeatWrapping
-  texture.repeat.set(1 / 5, 1 / 5)
-  const texture1 = texture.clone()
-  texture1.offset.set(2 / 5, 3 / 5)
-  const texture2 = texture.clone()
-  texture2.offset.set(2 / 5, 4 / 5)
+  const line = textureLoader.load("/images/line.jpg")
+  line.rotation = Math.PI / 2
+  line.colorSpace = SRGBColorSpace
+  line.wrapS = line.wrapT = RepeatWrapping
 
-  const puzzlePiece1 = puzzlePiece({
-    texture: texture1,
-    scale: 0.5,
-    posX: 0.8,
-    posY: -6.9,
-    posZ: 0.2,
-    rotZ: -Math.PI / 3,
-  })
-  const puzzlePiece2 = puzzlePiece({
-    texture: texture2,
-    scale: 0.5,
-    posX: 0,
-    posY: -6.9,
-    posZ: 0.3,
-    rotZ: Math.PI / 6,
+  const pieces: JigsawPiece[] = []
+  const pieceScale = 0.5
+
+  for (let i = 0; i <= 5; i++) {
+    pieces.push(
+      puzzlePiece({
+        texture: line,
+        scale: pieceScale,
+        posX: -2.2 + pieceScale * 1.1 * i,
+        posY: -6.9 + Math.random() / 5,
+        posZ: 0.2 - Math.random() / 8 + Math.random() / 5,
+        rotZ: Math.random() * 5,
+      })
+    )
+  }
+
+  shuffleArray(pieces)
+
+  pieces.forEach((piece, idx) => {
+    if (idx === 0) {
+      timeline
+        .to(piece.model.position, {
+          x: 0.8,
+          y: -6.9,
+          z: 0.2,
+          duration: duration,
+          delay: 2,
+        })
+        .to(
+          piece.model.rotation,
+          {
+            z: Math.PI / 2,
+            duration: duration,
+          },
+          "-=" + duration
+        )
+    } else {
+      timeline
+        .to(
+          piece.model.position,
+          {
+            x: 0.8 - idx * 0.5,
+            y: -6.9,
+            z: 0.2,
+            duration: duration,
+          },
+          "-=" + duration / 2
+        )
+        .to(
+          piece.model.rotation,
+          {
+            z: Math.PI / 2,
+            duration: duration,
+          },
+          "-=" + duration
+        )
+    }
   })
 
-  scene.add(
-    Card1.model,
-    Card2.model,
-    Card3.model,
-    puzzlePiece1.model,
-    puzzlePiece2.model
-  )
+  timeline
+    .to(Card1.model.position, {
+      x: 1.78,
+      z: 0.45,
+      duration: duration,
+    })
+    .to(
+      Card1.model.rotation,
+      {
+        z: -Math.PI / 2.5,
+        duration: duration,
+      },
+      "-=" + duration
+    )
+    .to(
+      Card2.model.position,
+      {
+        x: 1.76,
+        z: 0.22,
+        duration: duration,
+      },
+      "-=" + duration / 2
+    )
+    .to(
+      Card2.model.rotation,
+      {
+        z: -Math.PI / 4.5,
+        duration: duration,
+      },
+      "-=" + duration
+    )
+    .to(
+      Card3.model.position,
+      {
+        z: 0,
+        duration: duration,
+      },
+      "-=" + duration / 2
+    )
 
-  gsap.to(Card1.model.position, { x: 1.78, z: 0.45, duration: 0.4, delay: 2 })
-  gsap.to(Card1.model.rotation, { z: -Math.PI / 2.5, duration: 0.4, delay: 2 })
-  gsap.to(Card2.model.position, { x: 1.76, z: 0.22, duration: 0.4, delay: 2.2 })
-  gsap.to(Card2.model.rotation, {
-    z: -Math.PI / 4.5,
-    duration: 0.4,
-    delay: 2.2,
-  })
-  gsap.to(Card3.model.position, { z: 0, duration: 0.4, delay: 2.4 })
-
-  //   gsap.to(puzzlePiece1.model.position, { x: 1, duration: 0.4, delay: 2.6 })
-  gsap.to(puzzlePiece1.model.rotation, {
-    z: Math.PI / 2,
-    duration: 0.4,
-    delay: 2.6,
-  })
-
-  gsap.to(puzzlePiece2.model.position, {
-    x: 0.3,
-    z: 0.2,
-    duration: 0.4,
-    delay: 2.8,
-  })
-  gsap.to(puzzlePiece2.model.rotation, {
-    z: Math.PI / 2,
-    duration: 0.4,
-    delay: 2.8,
-  })
+  pieces.forEach((piece) => scene.add(piece.model))
+  scene.add(Card1.model, Card2.model, Card3.model)
 }

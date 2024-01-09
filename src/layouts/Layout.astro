@@ -32,7 +32,6 @@ const { title } = Astro.props
   }
   body {
     line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
   }
   ul {
     list-style-type: none;
@@ -79,6 +78,9 @@ const { title } = Astro.props
   }
   html {
     font-family: system-ui, sans-serif;
+
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
   }
   code {
     font-family:

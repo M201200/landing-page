@@ -2,7 +2,7 @@ import gsap from "gsap"
 import { ScrollTrigger } from "gsap/all"
 import type { Camera, PointLight } from "three"
 
-export function cameraPositionScroll(camera: Camera, light: PointLight) {
+export function scenePositionScroll(camera: Camera, light: PointLight) {
   gsap.registerPlugin(ScrollTrigger)
 
   const timeline = gsap.timeline()
@@ -12,7 +12,6 @@ export function cameraPositionScroll(camera: Camera, light: PointLight) {
       start: "top top",
       end: "bottom center",
       scrub: true,
-      markers: true,
     },
     x: 8,
     y: 20,
@@ -27,7 +26,6 @@ export function cameraPositionScroll(camera: Camera, light: PointLight) {
         endTrigger: ".game-links",
         end: "bottom center",
         scrub: true,
-        markers: true,
       },
       z: 8,
     })
@@ -37,7 +35,6 @@ export function cameraPositionScroll(camera: Camera, light: PointLight) {
         start: "top top",
         end: "bottom center",
         scrub: true,
-        markers: true,
       },
       z: 10,
       onUpdate: function () {
@@ -51,7 +48,6 @@ export function cameraPositionScroll(camera: Camera, light: PointLight) {
         endTrigger: "#jigsaw",
         end: "center center",
         scrub: true,
-        markers: true,
       },
       z: 25,
       onUpdate: function () {
@@ -64,7 +60,6 @@ export function cameraPositionScroll(camera: Camera, light: PointLight) {
         start: "top center",
         end: "center center",
         scrub: true,
-        markers: true,
       },
       y: 4,
     })
@@ -74,7 +69,6 @@ export function cameraPositionScroll(camera: Camera, light: PointLight) {
         start: "top center",
         end: "center center",
         scrub: true,
-        markers: true,
       },
       x: -Math.PI / 3,
       y: 0,
@@ -87,7 +81,6 @@ export function cameraPositionScroll(camera: Camera, light: PointLight) {
         endTrigger: "#board",
         end: "center center",
         scrub: true,
-        markers: true,
       },
       z: 55,
       onUpdate: function () {
@@ -101,7 +94,6 @@ export function cameraPositionScroll(camera: Camera, light: PointLight) {
         endTrigger: "#cards",
         end: "center center",
         scrub: true,
-        markers: true,
       },
       z: 85,
       onUpdate: function () {

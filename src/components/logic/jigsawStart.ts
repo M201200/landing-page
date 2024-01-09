@@ -38,7 +38,7 @@ export function jigsawStart(jigsaw: Jigsaw) {
   })
   let secondRow = 0
   jigsaw.pieces.jigsawPieces.forEach((piece, idx) => {
-    const random = +Math.random().toFixed(3)
+    const random = Math.random()
     const posY = piece.model.position.y + 2
 
     if (

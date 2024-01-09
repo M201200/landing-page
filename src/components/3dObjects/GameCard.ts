@@ -10,7 +10,7 @@ import {
 } from "three"
 import type { GameCard } from "../../types/3dObjects"
 
-import { cardBackgroundTemplate } from "../templates/CardBackgroundTemplate.ts"
+import { cardBackgroundTemplate } from "../../svg/CardBackgroundTemplate.ts"
 
 type GameCardProps = {
   faceColor?: string

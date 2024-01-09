@@ -14,7 +14,7 @@
   import { boardGame } from "./logic/boardGame.ts"
   import { cardGame } from "./logic/cardGame.ts"
 
-  import { cameraPositionScroll } from "./logic/cameraPositionScroll.ts"
+  import { scenePositionScroll } from "./logic/scenePositionScroll.ts"
   import { welcomeScreenAnimation } from "./logic/welcomeScreenAnimation.ts"
   import {
     AmbientLight,
@@ -115,7 +115,7 @@
     ],
   })
 
-  cameraPositionScroll(camera, topLight)
+  scenePositionScroll(camera, topLight)
 
   welcomeScreenAnimation(scene)
   cardGame(Deck, { posZ: 80, scale: 0.7 })
@@ -130,7 +130,7 @@
     grid-row: 1;
     grid-column: 1/-1;
 
-    z-index: -1;
+    /* z-index: -1; */
 
     opacity: 0;
     animation: fadeIn 1s ease-in-out 1s forwards;

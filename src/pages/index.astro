@@ -1,6 +1,5 @@
 ---
 import Layout from "../layouts/Layout.astro"
-import Card from "../components/Card.astro"
 import Scene from "../components/Scene.astro"
 ---
 
@@ -16,14 +15,9 @@ import Scene from "../components/Scene.astro"
       </p>
     </section>
     <section class="game-links">
-      <!-- <ul class="card-container"> -->
       <a class="jigsaw game-link" href="#jigsaw"> Jigsaw puzzle</a>
       <a class="board game-link" href="#board"> Board game</a>
       <a class="cards game-link" href="#cards"> Card game</a>
-      <!-- <Card href="#jigsaw" title="Jigsaw Puzzle" />
-      <Card href="#board" title="Board game" />
-      <Card href="#card" title="Card game" /> -->
-      <!-- </ul> -->
     </section>
     <section class="game-text jigsaw-text">
       <h2>Piece together a beautiful picture</h2>
@@ -45,11 +39,6 @@ import Scene from "../components/Scene.astro"
   </main>
 </Layout>
 
-<script>
-  import { canvasBgScrollAnimations } from "../components/logic/canvasBgScrollAnimations"
-  canvasBgScrollAnimations()
-</script>
-
 <style>
   h1 {
     font-size: clamp(3rem, 5vw, 4rem);
@@ -65,7 +54,7 @@ import Scene from "../components/Scene.astro"
     max-width: 60ch;
   }
 
-  /* h1,
+  h1,
   h2,
   p {
     z-index: 1;
@@ -73,24 +62,31 @@ import Scene from "../components/Scene.astro"
 
   button {
     position: relative;
-    z-index: 200;
+    z-index: 2;
     cursor: pointer;
-  } */
+  }
   main {
     position: relative;
     display: grid;
     justify-items: center;
-    /* grid-column-start: 2;
-    grid-column-end: 12; */
+    background: linear-gradient(
+      #fee8ff,
+      #f5e8ff,
+      #e8e9ff,
+      #e8fbff,
+      #e8ffe8,
+      #fff7e8,
+      #ffe8e8
+    );
     text-align: center;
-    /* background-color: rgba(160, 157, 157, 0.733); */
-    /* height: 400lvh; */
-    /* background-color: #fff0f0; */
   }
   section {
     height: 100lvh;
     height: 100vh;
     width: 100%;
+
+    scroll-snap-align: start;
+    scroll-margin: 0;
   }
   .welcome-screen {
     display: grid;
@@ -98,7 +94,6 @@ import Scene from "../components/Scene.astro"
     gap: 15vh;
     grid-row: 1;
     grid-column: 1/-1;
-    /* background-color: #fff0f0; */
   }
 
   .welcome-header {
@@ -121,8 +116,6 @@ import Scene from "../components/Scene.astro"
     align-items: center;
 
     font-weight: 700;
-
-    /* background-color: #fee8ff; */
   }
 
   .game-link {

@@ -12,9 +12,20 @@ import { shuffleArray } from "./shuffleArray"
 
 const textureLoader = new TextureLoader()
 
+const colorsArr = [
+  "/images/colors/red.jpg",
+  "/images/colors/blue.jpg",
+  "/images/colors/green.jpg",
+  "/images/colors/orange.jpg",
+  "/images/colors/purple.jpg",
+  "/images/colors/yellow.jpg",
+]
+
 export function welcomeScreenAnimation(scene: Scene) {
   const duration = 0.28
   const timeline = gsap.timeline()
+
+  const randomColors = shuffleArray(colorsArr)
 
   const Card1 = gameCard({
     faceColor: yellowCard,
@@ -45,18 +56,16 @@ export function welcomeScreenAnimation(scene: Scene) {
     rotX: -Math.PI / 2,
   })
 
-  const line = textureLoader.load("/images/line.jpg")
-  line.rotation = Math.PI / 2
-  line.colorSpace = SRGBColorSpace
-  line.wrapS = line.wrapT = RepeatWrapping
-
   const pieces: JigsawPiece[] = []
   const pieceScale = 0.5
 
   for (let i = 0; i <= 5; i++) {
+    const texture = textureLoader.load(randomColors[i])
+    texture.colorSpace = SRGBColorSpace
+    texture.wrapS = texture.wrapT = RepeatWrapping
     pieces.push(
       puzzlePiece({
-        texture: line,
+        texture: texture,
         scale: pieceScale,
         posX: -2.2 + pieceScale * 1.1 * i,
         posY: -6.9 + Math.random() / 5,

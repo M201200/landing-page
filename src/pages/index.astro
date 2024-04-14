@@ -6,12 +6,12 @@ import Scene from "../components/Scene.astro"
 <Layout title="Playground">
   <main>
     <section class="welcome-screen">
-      <h1 class="welcome-header">
-        Welcome to <span class="logo">Playground!</span>
+      <h1>
+        The <span>Playground</span>
       </h1>
-      <p class="welcome-text">
-        Here you can explore a diverse range* of games suitable for the entire
-        family and watch live demos
+      <p>
+        Explore a diverse range of games suitable for the entire family and
+        watch live demos
       </p>
     </section>
     <section class="game-links">
@@ -19,19 +19,19 @@ import Scene from "../components/Scene.astro"
       <a class="board game-link" href="#board"> Board game</a>
       <a class="cards game-link" href="#cards"> Card game</a>
     </section>
-    <section class="game-text jigsaw-text">
+    <section class="jigsaw-text">
       <h2>Piece together a beautiful picture</h2>
     </section>
     <section id="jigsaw">
-      <button id="assemble">Assemble</button>
+      <button id="assemble">Open</button>
     </section>
-    <section class="game-text board-text">
+    <section class="board-text">
       <h2>Enjoy a delightful time playing our board game</h2>
     </section>
     <section id="board">
       <button id="roll">Roll dice</button>
     </section>
-    <section class="game-text cards-text">
+    <section class="cards-text">
       <h2>Make your party fun with card game</h2>
     </section>
     <section id="cards"></section>
@@ -39,19 +39,21 @@ import Scene from "../components/Scene.astro"
   </main>
 </Layout>
 
-<style>
+<style lang="scss">
   h1 {
     font-size: clamp(3rem, 5vw, 4rem);
-    max-width: 20ch;
+    text-wrap: balance;
+    max-width: var(--size-content-2);
   }
 
   h2 {
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    max-width: 20ch;
+    font-size: var(--font-size-fluid-3);
+    text-wrap: balance;
+    max-width: var(--size-content-2);
   }
   p {
-    font-size: clamp(1rem, 2vw, 1.5rem);
-    max-width: 60ch;
+    font-size: var(--font-size-fluid-1);
+    max-width: var(--size-content-2);
   }
 
   h1,
@@ -70,42 +72,49 @@ import Scene from "../components/Scene.astro"
     display: grid;
     justify-items: center;
     background: linear-gradient(
-      #fee8ff,
-      #f5e8ff,
-      #e8e9ff,
-      #e8fbff,
-      #e8ffe8,
-      #fff7e8,
-      #ffe8e8
+      var(--yellow-0),
+      var(--lime-1),
+      var(--green-1),
+      var(--teal-1),
+      var(--lime-1),
+      var(--yellow-1),
+      var(--red-1)
     );
     text-align: center;
   }
   section {
-    height: 100lvh;
     height: 100vh;
+    height: 100lvh;
     width: 100%;
 
-    scroll-snap-align: start;
-    scroll-margin: 0;
+    display: grid;
+    position: relative;
+    place-content: center;
+    gap: 2rem;
+
+    /* scroll-snap-align: start; */
+    /* scroll-margin: 0; */
   }
   .welcome-screen {
     display: grid;
     place-content: center;
-    gap: 15vh;
+    gap: 16vh;
     grid-row: 1;
     grid-column: 1/-1;
-  }
 
-  .welcome-header {
-    color: #7a3a01;
-  }
+    h1 {
+      color: var(--choco-10);
+      font-weight: 900;
+      letter-spacing: var(--font-letterspacing-1);
+      span {
+        color: var(--red-8);
+      }
+    }
 
-  .logo {
-    color: #fa1924;
-  }
-
-  .welcome-text {
-    color: #884d1a;
+    p {
+      color: var(--choco-9);
+      font-weight: 400;
+    }
   }
 
   .game-links {
@@ -115,36 +124,50 @@ import Scene from "../components/Scene.astro"
     place-content: center;
     align-items: center;
 
-    font-weight: 700;
+    font-weight: 900;
+    padding: var(--size-fluid-4);
+    a {
+      text-decoration: none;
+      line-height: 1.4;
+      font-size: var(--font-size-fluid-2);
+      text-align: center;
+      padding: 2rem;
+      padding-top: 1.5rem;
+      color: var(--choco-8);
+      z-index: 1;
+      border-radius: 2rem;
+
+      box-shadow: var(--shadow-2);
+      transition: scale 300ms;
+      &:hover {
+        scale: 1.05;
+      }
+    }
+    .jigsaw {
+      grid-column: 1/2;
+      grid-row: 1/2;
+    }
+    .board {
+      grid-column: 2/3;
+      grid-row: 2/3;
+    }
+    .cards {
+      grid-column: 1/2;
+      grid-row: 3/4;
+    }
   }
 
-  .game-link {
-    text-decoration: none;
-    line-height: 1.4;
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    text-align: center;
-    padding: 1rem;
-    color: #7a3a01;
-    z-index: 1;
-  }
+  #jigsaw {
+    scroll-snap-align: start;
+    scroll-margin: 0;
+    button {
+      position: absolute;
 
-  .jigsaw {
-    grid-column: 1/2;
-    grid-row: 1/2;
-  }
-  .board {
-    grid-column: 2/3;
-    grid-row: 2/3;
-  }
-  .cards {
-    grid-column: 1/2;
-    grid-row: 3/4;
-  }
+      bottom: 60%;
+      right: 40%;
 
-  .game-text {
-    display: grid;
-    place-content: center;
-    gap: 2rem;
+      font-size: var(--font-size-fluid-1);
+    }
   }
   @media (min-width: 1024px) {
     /* .card-container {

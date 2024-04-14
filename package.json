@@ -16,6 +16,7 @@
     "cannon-es": "^0.20.0",
     "cannon-es-debugger": "^1.0.0",
     "gsap": "^3.12.3",
+    "open-props": "^1.7.2",
     "sass": "^1.68.0",
     "three": "^0.158.0"
   }

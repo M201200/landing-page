@@ -1,5 +1,6 @@
 import gsap from "gsap"
 import type { Jigsaw, JigsawPiece } from "../../types/3dObjects"
+import { shuffleArray } from "./shuffleArray"
 
 export function jigsawAssemble(
   jigsaw: Jigsaw,
@@ -12,7 +13,9 @@ export function jigsawAssemble(
   const jigsawRadiusX = (pieceScale * columns) / 2 - pieceScale / 2
   const jigsawRadiusZ = (pieceScale * rows) / 2 - pieceScale / 2
 
-  jigsaw.pieces.jigsawPieces.forEach((piece, idx) => {
+  const shuffledJigsaw = shuffleArray(jigsaw.pieces.jigsawPieces)
+
+  shuffledJigsaw.forEach((piece, idx) => {
     if (
       piece.column > 0 &&
       piece.column < columns &&

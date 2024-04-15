@@ -75,4 +75,24 @@ const { title } = Astro.props
     scroll-snap-type: y proximity;
     scroll-behavior: smooth;
   }
+
+  .fade-out {
+    animation: var(--animation-fade-out) forwards;
+    pointer-events: none;
+  }
+
+  .fade-in {
+    animation: var(--animation-fade-in) forwards;
+    pointer-events: initial !important;
+  }
+
+  .opacity-0 {
+    opacity: 0;
+  }
+
+  .screen-size {
+    height: 100vh;
+    height: 100lvh;
+    overflow: hidden;
+  }
 </style>

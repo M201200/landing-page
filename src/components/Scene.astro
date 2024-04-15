@@ -4,6 +4,7 @@
   import {
     renderEnvironment,
     updateSceneSize,
+    renderEnvironmentIsDone,
   } from "./logic/renderEnvironment.ts"
 
   import { jigsaw } from "./complexObjects/Jigsaw.ts"
@@ -12,7 +13,8 @@
   import { jigsawAssemble } from "./logic/jigsawAssemble.ts"
   import { jigsawStart } from "./logic/jigsawStart.ts"
   import { boardGame } from "./logic/boardGame.ts"
-  import { cardGame } from "./logic/cardGame.ts"
+  import { startCards } from "./logic/startCards.ts"
+  import { dealCards } from "./logic/dealCards.ts"
 
   import { scenePositionScroll } from "./logic/scenePositionScroll.ts"
   import { welcomeScreenAnimation } from "./logic/welcomeScreenAnimation.ts"
@@ -25,9 +27,15 @@
   } from "three"
   import { Vec3, World } from "cannon-es"
 
+  const main = document.querySelector("main")
+  const wrapper = document.querySelector(".wrapper")
+
   const canvas = document.querySelector("canvas")!
   const buttonRoll = document.querySelector("#roll")!
+  const buttonOpen = document.querySelector("#open")!
   const buttonAssemble = document.querySelector("#assemble")!
+  const buttonDeal = document.querySelector("#deal")!
+  const buttonStart = document.querySelector("#start")!
 
   ///////////////////////////////////////////////////////////////////////////////
   ///////////////////////////////////////////////////////////////////////////////
@@ -81,18 +89,40 @@
     scale: 0.7,
   })
 
-  buttonRoll.addEventListener("click", () => boardGame(BoardGameBundle))
+  buttonRoll.addEventListener("click", () => {
+    boardGame(BoardGameBundle)
+    buttonRoll.classList.add("fade-out")
+  })
+
+  buttonOpen.addEventListener("click", () => {
+    jigsawStart(Jigsaw)
+    buttonOpen.classList.add("fade-out")
+    setTimeout(() => {
+      buttonAssemble.classList.add("fade-in")
+    }, 1000)
+  })
 
   buttonAssemble.addEventListener("click", () => {
-    jigsawStart(Jigsaw)
-    setTimeout(
-      () =>
-        jigsawAssemble(Jigsaw, {
-          posY: Jigsaw.table.height,
-          posZ: 19.7,
-        }),
-      1500
-    )
+    jigsawAssemble(Jigsaw, {
+      posY: Jigsaw.table.height,
+      posZ: 19.7,
+    })
+    buttonAssemble.classList.remove("fade-in")
+    buttonAssemble.classList.add("fade-out")
+  })
+
+  buttonDeal.addEventListener("click", () => {
+    dealCards(Deck, { posZ: 80, scale: 0.7 })
+    buttonDeal.classList.add("fade-out")
+    setTimeout(() => {
+      buttonStart.classList.add("fade-in")
+    }, 8000)
+  })
+
+  buttonStart.addEventListener("click", () => {
+    startCards(Deck, { posZ: 80 })
+    buttonStart.classList.remove("fade-in")
+    buttonStart.classList.add("fade-out")
   })
 
   Jigsaw.pieces.jigsawPieces.forEach((piece) => scene.add(piece.model))
@@ -115,10 +145,20 @@
     ],
   })
 
+  if (renderEnvironmentIsDone) {
+    setTimeout(() => {
+      main?.classList.remove("screen-size")
+      wrapper?.classList.add("opacity-0")
+    }, 500)
+
+    setTimeout(() => {
+      wrapper?.remove()
+    }, 3000)
+  }
+
   scenePositionScroll(camera, topLight)
 
   welcomeScreenAnimation(scene)
-  cardGame(Deck, { posZ: 80, scale: 0.7 })
 </script>
 
 <style>
@@ -129,16 +169,5 @@
     width: 100%;
     grid-row: 1;
     grid-column: 1/-1;
-
-    /* z-index: -1; */
-
-    opacity: 0;
-    animation: fadeIn 1s ease-in-out 1s forwards;
-  }
-
-  @keyframes fadeIn {
-    to {
-      opacity: 1;
-    }
   }
 </style>

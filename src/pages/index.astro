@@ -1,10 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro"
 import Scene from "../components/Scene.astro"
+import Loader from "../components/Loader.astro"
 ---
 
 <Layout title="Playground">
-  <main>
+  <main class="screen-size">
     <section class="welcome-screen">
       <h1>
         The <span>Playground</span>
@@ -23,7 +24,8 @@ import Scene from "../components/Scene.astro"
       <h2>Piece together a beautiful picture</h2>
     </section>
     <section id="jigsaw">
-      <button id="assemble">Open</button>
+      <button id="open">Open</button>
+      <button id="assemble">Assemble</button>
     </section>
     <section class="board-text">
       <h2>Enjoy a delightful time playing our board game</h2>
@@ -34,8 +36,12 @@ import Scene from "../components/Scene.astro"
     <section class="cards-text">
       <h2>Make your party fun with card game</h2>
     </section>
-    <section id="cards"></section>
+    <section id="cards">
+      <button id="deal">Deal</button>
+      <button id="start">Start game</button>
+    </section>
     <Scene />
+    <Loader />
   </main>
 </Layout>
 
@@ -47,9 +53,10 @@ import Scene from "../components/Scene.astro"
   }
 
   h2 {
-    font-size: var(--font-size-fluid-3);
+    font-size: var(--font-size-fluid-2);
     text-wrap: balance;
     max-width: var(--size-content-2);
+    color: var(--gray-10);
   }
   p {
     font-size: var(--font-size-fluid-1);
@@ -91,9 +98,6 @@ import Scene from "../components/Scene.astro"
     position: relative;
     place-content: center;
     gap: 2rem;
-
-    /* scroll-snap-align: start; */
-    /* scroll-margin: 0; */
   }
   .welcome-screen {
     display: grid;
@@ -124,6 +128,9 @@ import Scene from "../components/Scene.astro"
     place-content: center;
     align-items: center;
 
+    scroll-snap-align: start;
+    scroll-margin: 0;
+
     font-weight: 900;
     padding: var(--size-fluid-4);
     a {
@@ -133,7 +140,7 @@ import Scene from "../components/Scene.astro"
       text-align: center;
       padding: 2rem;
       padding-top: 1.5rem;
-      color: var(--choco-8);
+      color: var(--gray-10);
       z-index: 1;
       border-radius: 2rem;
 
@@ -160,18 +167,115 @@ import Scene from "../components/Scene.astro"
   #jigsaw {
     scroll-snap-align: start;
     scroll-margin: 0;
-    button {
+    #open {
       position: absolute;
 
       bottom: 60%;
       right: 40%;
 
       font-size: var(--font-size-fluid-1);
+
+      color: var(--green-12);
+
+      background-color: var(--green-3);
+      border-radius: 1rem;
+      padding: 1rem;
+      padding-top: 0.5rem;
+
+      box-shadow: var(--shadow-2);
+      font-weight: 700;
+    }
+
+    #assemble {
+      position: absolute;
+
+      bottom: 60%;
+      right: 50%;
+
+      font-size: var(--font-size-fluid-1);
+
+      color: var(--pink-12);
+
+      background-color: var(--red-3);
+      border-radius: 1rem;
+      padding: 1rem;
+      padding-top: 0.5rem;
+
+      box-shadow: var(--shadow-2);
+      font-weight: 700;
+
+      opacity: 0;
+      pointer-events: none;
     }
   }
-  @media (min-width: 1024px) {
-    /* .card-container {
-      grid-template-columns: repeat(3, 1fr);
-    } */
+
+  #board {
+    scroll-snap-align: start;
+    scroll-margin: 0;
+
+    #roll {
+      position: absolute;
+
+      top: 20%;
+      right: 50%;
+
+      font-size: var(--font-size-fluid-1);
+
+      color: var(--gray-11);
+
+      background-color: var(--gray-3);
+      border-radius: 1rem;
+      padding: 1rem;
+      padding-top: 0.8rem;
+
+      box-shadow: var(--shadow-2);
+      font-weight: 700;
+    }
+  }
+
+  #cards {
+    scroll-snap-align: start;
+    scroll-margin: 0;
+
+    #deal {
+      position: absolute;
+
+      bottom: 40%;
+      right: 20%;
+
+      font-size: var(--font-size-fluid-1);
+
+      color: var(--green-12);
+
+      background-color: var(--green-3);
+      border-radius: 1rem;
+      padding: 1rem;
+      padding-top: 0.5rem;
+
+      box-shadow: var(--shadow-2);
+      font-weight: 700;
+    }
+
+    #start {
+      position: absolute;
+
+      bottom: 10%;
+      left: 50%;
+
+      font-size: var(--font-size-fluid-1);
+
+      color: var(--pink-12);
+
+      background-color: var(--red-3);
+      border-radius: 1rem;
+      padding: 1rem;
+      padding-top: 0.5rem;
+
+      box-shadow: var(--shadow-2);
+      font-weight: 700;
+
+      opacity: 0;
+      pointer-events: none;
+    }
   }
 </style>

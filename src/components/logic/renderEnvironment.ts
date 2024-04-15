@@ -24,6 +24,7 @@ type RenderEnvironment = {
 }
 
 // export const cannonDebugger = new CannonDebugger(scene, world)
+export let renderEnvironmentIsDone = false
 
 export function renderEnvironment({
   renderer,
@@ -97,6 +98,8 @@ export function renderEnvironment({
     objects: physicalObjectsToAnimate,
     objectArrays: physicalObjectArraysToAnimate,
   })
+
+  renderEnvironmentIsDone = true
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
